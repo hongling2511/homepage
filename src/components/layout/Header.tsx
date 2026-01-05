@@ -10,11 +10,12 @@ export function Header() {
   const { t } = useLanguage();
 
   const navItems = [
-    { name: t.nav.about, href: "#about" },
-    { name: t.nav.skills, href: "#skills" },
-    { name: t.nav.projects, href: "#projects" },
-    { name: t.nav.experience, href: "#experience" },
-    { name: t.nav.contact, href: "#contact" },
+    { name: t.nav.about, href: "/#about" },
+    { name: t.nav.skills, href: "/#skills" },
+    { name: t.nav.projects, href: "/#projects" },
+    { name: t.nav.experience, href: "/#experience" },
+    { name: t.nav.blog, href: "/blog" },
+    { name: t.nav.contact, href: "/#contact" },
   ];
 
   return (

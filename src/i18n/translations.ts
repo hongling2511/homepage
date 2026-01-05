@@ -7,7 +7,32 @@ export interface Translations {
     skills: string;
     projects: string;
     experience: string;
+    blog: string;
     contact: string;
+  };
+  blog: {
+    title: string;
+    subtitle: string;
+    readMore: string;
+    readingTime: string;
+    minuteRead: string;
+    minutesRead: string;
+    searchPlaceholder: string;
+    allCategories: string;
+    allTags: string;
+    noResults: string;
+    latestPosts: string;
+    viewAllPosts: string;
+    categories: {
+      tech: string;
+      architecture: string;
+      career: string;
+      life: string;
+      tutorial: string;
+    };
+    publishedOn: string;
+    backToBlog: string;
+    tableOfContents: string;
   };
   hero: {
     status: string;
@@ -78,7 +103,32 @@ export const translations: Record<Locale, Translations> = {
       skills: "技能",
       projects: "项目",
       experience: "经历",
+      blog: "博客",
       contact: "联系",
+    },
+    blog: {
+      title: "cat blog/",
+      subtitle: "技术博客 & 思考",
+      readMore: "阅读全文",
+      readingTime: "阅读时间",
+      minuteRead: "分钟",
+      minutesRead: "分钟",
+      searchPlaceholder: "搜索文章...",
+      allCategories: "全部分类",
+      allTags: "全部标签",
+      noResults: "没有找到相关文章",
+      latestPosts: "最新文章",
+      viewAllPosts: "查看全部文章",
+      categories: {
+        tech: "技术",
+        architecture: "架构",
+        career: "职业",
+        life: "生活",
+        tutorial: "教程",
+      },
+      publishedOn: "发布于",
+      backToBlog: "返回博客",
+      tableOfContents: "目录",
     },
     hero: {
       status: "available for opportunities",
@@ -147,7 +197,32 @@ export const translations: Record<Locale, Translations> = {
       skills: "Skills",
       projects: "Projects",
       experience: "Experience",
+      blog: "Blog",
       contact: "Contact",
+    },
+    blog: {
+      title: "cat blog/",
+      subtitle: "Tech Blog & Thoughts",
+      readMore: "Read More",
+      readingTime: "Reading Time",
+      minuteRead: "min",
+      minutesRead: "mins",
+      searchPlaceholder: "Search posts...",
+      allCategories: "All Categories",
+      allTags: "All Tags",
+      noResults: "No posts found",
+      latestPosts: "Latest Posts",
+      viewAllPosts: "View All Posts",
+      categories: {
+        tech: "Tech",
+        architecture: "Architecture",
+        career: "Career",
+        life: "Life",
+        tutorial: "Tutorial",
+      },
+      publishedOn: "Published on",
+      backToBlog: "Back to Blog",
+      tableOfContents: "Table of Contents",
     },
     hero: {
       status: "available for opportunities",
