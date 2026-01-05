@@ -7,10 +7,9 @@ interface MermaidProps {
   chart: string;
 }
 
-// Initialize mermaid with theme settings
-mermaid.initialize({
-  startOnLoad: false,
-  theme: "dark",
+// Theme configurations
+const darkTheme = {
+  theme: "dark" as const,
   themeVariables: {
     primaryColor: "#3b82f6",
     primaryTextColor: "#f8fafc",
@@ -25,19 +24,69 @@ mermaid.initialize({
     titleColor: "#f8fafc",
     edgeLabelBackground: "#1e293b",
   },
-  fontFamily: "JetBrains Mono, monospace",
-});
+};
+
+const lightTheme = {
+  theme: "base" as const,
+  themeVariables: {
+    primaryColor: "#3b82f6",
+    primaryTextColor: "#1e293b",
+    primaryBorderColor: "#3b82f6",
+    lineColor: "#64748b",
+    secondaryColor: "#e2e8f0",
+    tertiaryColor: "#f1f5f9",
+    background: "#ffffff",
+    mainBkg: "#f8fafc",
+    nodeBorder: "#3b82f6",
+    clusterBkg: "#f1f5f9",
+    titleColor: "#0f172a",
+    edgeLabelBackground: "#f8fafc",
+  },
+};
 
 export function Mermaid({ chart }: MermaidProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [isDark, setIsDark] = useState(true);
+
+  // Detect theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains("dark");
+      setIsDark(isDarkMode);
+    };
+
+    // Initial check
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          checkTheme();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const renderChart = async () => {
       if (!containerRef.current || !chart) return;
 
       try {
+        // Re-initialize mermaid with current theme
+        const themeConfig = isDark ? darkTheme : lightTheme;
+        mermaid.initialize({
+          startOnLoad: false,
+          ...themeConfig,
+          fontFamily: "JetBrains Mono, monospace",
+        });
+
         const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
         const { svg } = await mermaid.render(id, chart);
         setSvg(svg);
@@ -49,7 +98,7 @@ export function Mermaid({ chart }: MermaidProps) {
     };
 
     renderChart();
-  }, [chart]);
+  }, [chart, isDark]);
 
   if (error) {
     return (
