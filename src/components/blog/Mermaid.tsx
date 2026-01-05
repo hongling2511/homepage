@@ -11,6 +11,7 @@ interface MermaidProps {
 const darkTheme = {
   theme: "dark" as const,
   themeVariables: {
+    // General
     primaryColor: "#3b82f6",
     primaryTextColor: "#f8fafc",
     primaryBorderColor: "#3b82f6",
@@ -23,24 +24,55 @@ const darkTheme = {
     clusterBkg: "#1e293b",
     titleColor: "#f8fafc",
     edgeLabelBackground: "#1e293b",
+    // Text
+    textColor: "#f8fafc",
+    // Flowchart
+    nodeTextColor: "#f8fafc",
+    // Mindmap specific
+    nodeBkg: "#1e293b",
+    // Pie chart
+    pie1: "#3b82f6",
+    pie2: "#8b5cf6",
+    pie3: "#06b6d4",
+    pie4: "#10b981",
+    pie5: "#f59e0b",
+    pieTextColor: "#f8fafc",
+    pieSectionTextColor: "#f8fafc",
+    pieLegendTextColor: "#f8fafc",
   },
 };
 
 const lightTheme = {
   theme: "base" as const,
   themeVariables: {
+    // General
     primaryColor: "#3b82f6",
-    primaryTextColor: "#1e293b",
+    primaryTextColor: "#0f172a",
     primaryBorderColor: "#3b82f6",
     lineColor: "#64748b",
-    secondaryColor: "#e2e8f0",
-    tertiaryColor: "#f1f5f9",
+    secondaryColor: "#dbeafe",
+    tertiaryColor: "#eff6ff",
     background: "#ffffff",
-    mainBkg: "#f8fafc",
+    mainBkg: "#eff6ff",
     nodeBorder: "#3b82f6",
     clusterBkg: "#f1f5f9",
     titleColor: "#0f172a",
-    edgeLabelBackground: "#f8fafc",
+    edgeLabelBackground: "#ffffff",
+    // Text - ensure dark text on light background
+    textColor: "#0f172a",
+    // Flowchart
+    nodeTextColor: "#0f172a",
+    // Mindmap specific - use blue tones for better visibility
+    nodeBkg: "#dbeafe",
+    // Pie chart
+    pie1: "#3b82f6",
+    pie2: "#8b5cf6",
+    pie3: "#06b6d4",
+    pie4: "#10b981",
+    pie5: "#f59e0b",
+    pieTextColor: "#0f172a",
+    pieSectionTextColor: "#ffffff",
+    pieLegendTextColor: "#0f172a",
   },
 };
 
