@@ -1,0 +1,542 @@
+---
+title: "Claude Agent SDK 学习卡片"
+date: "2026-01-09"
+excerpt: "通过精心设计的知识卡片，快速掌握 Claude Agent SDK 的核心概念。"
+category: "tutorial"
+tags: ["AI", "Claude", "Agent SDK", "学习指南"]
+---
+
+import { Card, CardGrid } from '@/components/Card';
+
+<div className="sdk-cards">
+
+<div className="video-container">
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/TqC1qOfiVcQ"
+  title="Claude Agent SDK"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+</div>
+
+---
+
+## 核心架构
+
+<div className="card-grid cols-3">
+
+<div className="study-card accent-blue">
+<div className="card-icon">🔄</div>
+<h3>智能体循环</h3>
+<div className="card-content">
+
+**收集** → **执行** → **验证** → 循环
+
+- 收集：搜索、读取、子智能体
+- 执行：Bash、工具、代码生成
+- 验证：规则、视觉、LLM
+
+</div>
+</div>
+
+<div className="study-card accent-purple">
+<div className="card-icon">🛠️</div>
+<h3>Bash = 超级工具</h3>
+<div className="card-content">
+
+**"第一代码模式"**
+
+```bash
+tail -f log | grep ERROR
+```
+
+通用 + 可组合 + 动态脚本
+
+</div>
+</div>
+
+<div className="study-card accent-green">
+<div className="card-icon">🔌</div>
+<h3>MCP 协议</h3>
+<div className="card-content">
+
+**标准化外部集成**
+
+Agent ⟷ MCP ⟷ Slack/GitHub/...
+
+即插即用，自动认证
+
+</div>
+</div>
+
+</div>
+
+---
+
+## 关键组件
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-orange">
+<div className="card-icon">👥</div>
+<h3>子智能体</h3>
+<div className="card-content">
+
+| 优势 | 说明 |
+|:--:|:--|
+| ⚡ | 并行处理多任务 |
+| 📦 | 隔离上下文，返回摘要 |
+
+> 像研究团队的初级成员
+
+</div>
+</div>
+
+<div className="study-card accent-teal">
+<div className="card-icon">📝</div>
+<h3>技能系统</h3>
+<div className="card-content">
+
+| 本质 | 文件夹形式的指令集 |
+|:--:|:--|
+| 机制 | 渐进式上下文披露 |
+| 场景 | 前端设计、文档生成 |
+
+</div>
+</div>
+
+</div>
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-pink">
+<div className="card-icon">🗜️</div>
+<h3>Compact 压缩</h3>
+<div className="card-content">
+
+**问题**：长对话耗尽上下文
+
+**方案**：自动总结历史消息
+
+监测 → 触发 → 摘要 → 继续
+
+</div>
+</div>
+
+<div className="study-card accent-indigo">
+<div className="card-icon">💻</div>
+<h3>代码生成</h3>
+<div className="card-content">
+
+**为什么是核心能力？**
+
+✅ 精确可预测
+✅ 可组合复用
+✅ 处理复杂操作
+
+</div>
+</div>
+
+</div>
+
+---
+
+## 安全模型
+
+<div className="study-card wide accent-red">
+<div className="card-icon">🧀</div>
+<h3>瑞士奶酪防御</h3>
+<div className="card-content defense-layers">
+
+```
+输入 → [模型对齐] → [工具权限] → [沙盒环境] → 安全输出
+         防恶意        解析控制       限制影响
+```
+
+**单层有漏洞，多层叠加确保安全**
+
+</div>
+</div>
+
+<div className="card-grid cols-3">
+
+<div className="study-card small accent-green">
+<h4>规则检查</h4>
+<p>⭐⭐⭐ 快 | 代码/结构数据</p>
+</div>
+
+<div className="study-card small accent-yellow">
+<h4>视觉反馈</h4>
+<p>⭐⭐ 中 | UI/格式化</p>
+</div>
+
+<div className="study-card small accent-orange">
+<h4>LLM 评判</h4>
+<p>⭐ 慢 | 主观质量</p>
+</div>
+
+</div>
+
+---
+
+## 智能体 vs 工作流
+
+<div className="comparison-table">
+
+| | 🤖 智能体 | 📋 工作流 |
+|:--|:--|:--|
+| **输入** | 模糊自然语言 | 明确定义 |
+| **轨迹** | 自主决定 | 预设路径 |
+| **场景** | 探索性任务 | 流程化任务 |
+| **例子** | Claude Code | CI/CD |
+
+</div>
+
+---
+
+## 术语速查
+
+<div className="term-grid">
+
+| 术语 | 一句话定义 |
+|:--|:--|
+| **智能搜索** | 用 grep/tail 主动搜索文件 |
+| **Hooks** | 运行时的确定性验证/插入 |
+| **Compact** | 自动总结防止上下文耗尽 |
+| **上下文工程** | 通过环境结构优化性能 |
+| **Tools** | 原子操作的定义 |
+
+</div>
+
+---
+
+## 自测问答
+
+<details>
+<summary>❓ SDK 的核心设计原则？</summary>
+
+通过终端让智能体访问计算机，使用人类相同的工具。
+
+</details>
+
+<details>
+<summary>❓ 为什么 Bash 最强大？</summary>
+
+通用 + 可组合 + 存储结果 + 动态脚本 + 复用现有软件
+
+</details>
+
+<details>
+<summary>❓ 子智能体的两大优势？</summary>
+
+1. 并行化处理
+2. 隔离上下文，只返回关键信息
+
+</details>
+
+<details>
+<summary>❓ 三种验证方法的选择？</summary>
+
+- 代码 → 规则检查（TypeScript/ESLint）
+- UI → 视觉反馈（截图）
+- 主观内容 → LLM 评判（谨慎）
+
+</details>
+
+---
+
+<div className="checklist">
+
+## 学习进度
+
+- [ ] 智能体循环三阶段
+- [ ] Bash 的核心优势
+- [ ] 子智能体与上下文管理
+- [ ] MCP 协议作用
+- [ ] 瑞士奶酪防御模型
+- [ ] 验证方法选择
+
+</div>
+
+</div>
+
+<style>{`
+.video-container {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe {
+  display: block;
+}
+
+.sdk-cards {
+  --card-radius: 12px;
+  --sdk-blue: #3b82f6;
+  --sdk-purple: #8b5cf6;
+  --sdk-green: #10b981;
+  --sdk-orange: #f59e0b;
+  --sdk-teal: #14b8a6;
+  --sdk-pink: #ec4899;
+  --sdk-indigo: #6366f1;
+  --sdk-red: #ef4444;
+  --sdk-yellow: #eab308;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid.cols-2,
+  .card-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.study-card {
+  background: var(--card);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  border-left: 4px solid var(--sdk-accent, var(--sdk-blue));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.study-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.study-card.wide {
+  grid-column: 1 / -1;
+}
+
+.study-card.small {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.study-card.small h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.study-card.small p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--foreground) !important;
+}
+
+.study-card.accent-blue { --sdk-accent: var(--sdk-blue); }
+.study-card.accent-purple { --sdk-accent: var(--sdk-purple); }
+.study-card.accent-green { --sdk-accent: var(--sdk-green); }
+.study-card.accent-orange { --sdk-accent: var(--sdk-orange); }
+.study-card.accent-teal { --sdk-accent: var(--sdk-teal); }
+.study-card.accent-pink { --sdk-accent: var(--sdk-pink); }
+.study-card.accent-indigo { --sdk-accent: var(--sdk-indigo); }
+.study-card.accent-red { --sdk-accent: var(--sdk-red); }
+.study-card.accent-yellow { --sdk-accent: var(--sdk-yellow); }
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--sdk-accent) !important;
+}
+
+.study-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--sdk-accent) !important;
+}
+
+.card-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--foreground) !important;
+}
+
+.card-content p,
+.card-content li,
+.card-content span {
+  color: var(--foreground) !important;
+}
+
+.card-content strong {
+  color: var(--foreground) !important;
+  font-weight: 600;
+}
+
+.card-content table {
+  width: 100%;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.card-content th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.card-content td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.card-content pre {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.card-content code {
+  background: var(--card);
+  color: var(--accent);
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+}
+
+.card-content blockquote {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  background: var(--card);
+  border-left: 3px solid var(--sdk-accent);
+  color: var(--foreground) !important;
+}
+
+.defense-layers pre {
+  text-align: center;
+  background: transparent !important;
+  border: none !important;
+  font-size: 0.85rem;
+  color: var(--foreground) !important;
+}
+
+.comparison-table {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
+.comparison-table th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.comparison-table td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.term-grid {
+  margin: 1rem 0;
+}
+
+.term-grid table {
+  width: 100%;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+}
+
+.term-grid th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.term-grid td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+details summary {
+  font-weight: 500;
+  user-select: none;
+  color: var(--foreground) !important;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+details p,
+details li,
+details ol {
+  color: var(--foreground) !important;
+}
+
+.checklist {
+  background: var(--card);
+  border: 2px solid var(--success);
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  margin-top: 2rem;
+}
+
+.checklist h2 {
+  margin-top: 0;
+  color: var(--success) !important;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border);
+  color: var(--foreground) !important;
+}
+`}</style>

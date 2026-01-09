@@ -1,0 +1,773 @@
+---
+title: "Claude Agent SDK Study Cards"
+date: "2026-01-09"
+excerpt: "Master Claude Agent SDK core concepts through carefully designed knowledge cards."
+category: "tutorial"
+tags: ["AI", "Claude", "Agent SDK", "Study Guide"]
+---
+
+import { Card, CardGrid } from '@/components/Card';
+
+<div className="sdk-cards">
+
+<div className="video-container">
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/TqC1qOfiVcQ"
+  title="Claude Agent SDK"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+</div>
+
+---
+
+## Core Architecture
+
+<div className="card-grid cols-3">
+
+<div className="study-card accent-blue">
+<div className="card-icon">🔄</div>
+<h3>Agentic Loop</h3>
+<div className="card-content">
+
+**Gather** → **Act** → **Verify** → Loop
+
+- Gather: Search, read, subagents
+- Act: Bash, tools, code generation
+- Verify: Rules, visual, LLM
+
+</div>
+</div>
+
+<div className="study-card accent-purple">
+<div className="card-icon">🛠️</div>
+<h3>Bash = Super Tool</h3>
+<div className="card-content">
+
+**"First Code Mode"**
+
+```bash
+tail -f log | grep ERROR
+```
+
+General + Composable + Dynamic
+
+</div>
+</div>
+
+<div className="study-card accent-green">
+<div className="card-icon">🔌</div>
+<h3>MCP Protocol</h3>
+<div className="card-content">
+
+**Standardized Integration**
+
+Agent ⟷ MCP ⟷ Slack/GitHub/...
+
+Plug & play, auto-auth
+
+</div>
+</div>
+
+</div>
+
+---
+
+## Key Components
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-orange">
+<div className="card-icon">👥</div>
+<h3>Subagents</h3>
+<div className="card-content">
+
+| Benefit | Description |
+|:--:|:--|
+| ⚡ | Parallel task processing |
+| 📦 | Isolated context, return summary |
+
+> Like junior researchers on a team
+
+</div>
+</div>
+
+<div className="study-card accent-teal">
+<div className="card-icon">📝</div>
+<h3>Skills System</h3>
+<div className="card-content">
+
+| Essence | Folder-based instruction sets |
+|:--:|:--|
+| Mechanism | Progressive context disclosure |
+| Use Cases | Frontend design, doc generation |
+
+</div>
+</div>
+
+</div>
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-pink">
+<div className="card-icon">🗜️</div>
+<h3>Compaction</h3>
+<div className="card-content">
+
+**Problem**: Long conversations exhaust context
+
+**Solution**: Auto-summarize history
+
+Monitor → Trigger → Summarize → Continue
+
+</div>
+</div>
+
+<div className="study-card accent-indigo">
+<div className="card-icon">💻</div>
+<h3>Code Generation</h3>
+<div className="card-content">
+
+**Why is it core?**
+
+✅ Precise & predictable
+✅ Composable & reusable
+✅ Handles complex operations
+
+</div>
+</div>
+
+</div>
+
+---
+
+## Security Model
+
+<div className="study-card wide accent-red">
+<div className="card-icon">🧀</div>
+<h3>Swiss Cheese Defense</h3>
+<div className="card-content defense-layers">
+
+```
+Input → [Model Alignment] → [Tool Permissions] → [Sandboxing] → Safe Output
+           Prevent evil       Parse & control      Limit impact
+```
+
+**Single layers may have holes, but stacked layers ensure security**
+
+</div>
+</div>
+
+<div className="card-grid cols-3">
+
+<div className="study-card small accent-green">
+<h4>Rules Check</h4>
+<p>⭐⭐⭐ Fast | Code/structured data</p>
+</div>
+
+<div className="study-card small accent-yellow">
+<h4>Visual Feedback</h4>
+<p>⭐⭐ Medium | UI/formatting</p>
+</div>
+
+<div className="study-card small accent-orange">
+<h4>LLM as Judge</h4>
+<p>⭐ Slow | Subjective quality</p>
+</div>
+
+</div>
+
+---
+
+## Agent vs Workflow
+
+<div className="comparison-table">
+
+| | 🤖 Agent | 📋 Workflow |
+|:--|:--|:--|
+| **Input** | Ambiguous NL | Well-defined |
+| **Path** | Self-determined | Predefined |
+| **Best For** | Exploratory tasks | Process tasks |
+| **Example** | Claude Code | CI/CD |
+
+</div>
+
+---
+
+## Term Quick Reference
+
+<div className="term-grid">
+
+| Term | One-line Definition |
+|:--|:--|
+| **Agentic Search** | Active file search via grep/tail |
+| **Hooks** | Runtime deterministic verification/injection |
+| **Compact** | Auto-summarize to prevent context exhaustion |
+| **Context Engineering** | Optimize performance via environment structure |
+| **Tools** | Atomic operation definitions |
+
+</div>
+
+---
+
+## Self-Test Q&A
+
+<details>
+<summary>❓ What's the SDK's core design principle?</summary>
+
+Give agents computer access via terminal, using the same tools humans use.
+
+</details>
+
+<details>
+<summary>❓ Why is Bash the most powerful?</summary>
+
+General + Composable + Store results + Dynamic scripts + Reuse existing software
+
+</details>
+
+<details>
+<summary>❓ Two main benefits of subagents?</summary>
+
+1. Parallelization
+2. Isolated context, return only key info
+
+</details>
+
+<details>
+<summary>❓ How to choose verification methods?</summary>
+
+- Code → Rules check (TypeScript/ESLint)
+- UI → Visual feedback (screenshots)
+- Subjective → LLM as judge (use carefully)
+
+</details>
+
+---
+
+<div className="checklist">
+
+## Learning Progress
+
+- [ ] Three-stage agentic loop
+- [ ] Bash core advantages
+- [ ] Subagents & context management
+- [ ] MCP protocol role
+- [ ] Swiss Cheese Defense model
+- [ ] Verification method selection
+
+</div>
+
+</div>
+
+<style>{`
+.video-container {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe {
+  display: block;
+}
+
+.sdk-cards {
+  --card-radius: 12px;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-teal: #14b8a6;
+  --accent-pink: #ec4899;
+  --accent-indigo: #6366f1;
+  --accent-red: #ef4444;
+  --accent-yellow: #eab308;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid.cols-2,
+  .card-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.study-card {
+  background: var(--card-bg, #f8fafc);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  border-left: 4px solid var(--accent, #3b82f6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.study-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.study-card.wide {
+  grid-column: 1 / -1;
+}
+
+.study-card.small {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.study-card.small h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.study-card.small p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.study-card.accent-blue { --accent: var(--accent-blue); }
+.study-card.accent-purple { --accent: var(--accent-purple); }
+.study-card.accent-green { --accent: var(--accent-green); }
+.study-card.accent-orange { --accent: var(--accent-orange); }
+.study-card.accent-teal { --accent: var(--accent-teal); }
+.study-card.accent-pink { --accent: var(--accent-pink); }
+.study-card.accent-indigo { --accent: var(--accent-indigo); }
+.study-card.accent-red { --accent: var(--accent-red); }
+.study-card.accent-yellow { --accent: var(--accent-yellow); }
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.study-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--accent);
+}
+
+.card-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.card-content table {
+  width: 100%;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.card-content pre {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.card-content blockquote {
+  margin: 0.5rem 0;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.defense-layers pre {
+  text-align: center;
+  background: transparent;
+  font-size: 0.85rem;
+}
+
+.comparison-table {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+}
+
+.term-grid {
+  margin: 1rem 0;
+}
+
+.term-grid table {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+details summary {
+  font-weight: 500;
+  user-select: none;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+.checklist {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  margin-top: 2rem;
+}
+
+.checklist h2 {
+  margin-top: 0;
+  color: #059669;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #d1fae5;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .sdk-cards {
+    --accent-blue: #93c5fd;
+    --accent-purple: #c4b5fd;
+    --accent-green: #6ee7b7;
+    --accent-orange: #fcd34d;
+    --accent-teal: #5eead4;
+    --accent-pink: #f9a8d4;
+    --accent-indigo: #a5b4fc;
+    --accent-red: #fca5a5;
+    --accent-yellow: #fde047;
+  }
+
+  .study-card {
+    --card-bg: #1e293b !important;
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+
+  .study-card * {
+    color: inherit;
+  }
+
+  .study-card h3,
+  .study-card h4 {
+    color: var(--accent) !important;
+  }
+
+  .study-card.small p {
+    color: #e2e8f0 !important;
+  }
+
+  .card-content {
+    color: #f1f5f9 !important;
+  }
+
+  .card-content p,
+  .card-content li,
+  .card-content span {
+    color: #f1f5f9 !important;
+  }
+
+  .card-content strong {
+    color: #ffffff !important;
+  }
+
+  .card-content table {
+    border: 1px solid #475569;
+  }
+
+  .card-content th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .card-content td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .card-content pre {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #475569;
+  }
+
+  .card-content code {
+    background: #334155 !important;
+    color: #e2e8f0 !important;
+  }
+
+  .card-content blockquote {
+    background: #334155 !important;
+    border-left: 3px solid var(--accent);
+    color: #e2e8f0 !important;
+  }
+
+  .defense-layers pre {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+    border: none !important;
+  }
+
+  .comparison-table table {
+    border: 1px solid #475569;
+  }
+
+  .comparison-table th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .comparison-table td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .term-grid table {
+    border: 1px solid #475569;
+  }
+
+  .term-grid th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .term-grid td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  details {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  details summary {
+    color: #ffffff !important;
+  }
+
+  details p,
+  details li,
+  details ol {
+    color: #e2e8f0 !important;
+  }
+
+  .checklist {
+    background: #1e293b !important;
+    border: 2px solid #10b981 !important;
+  }
+
+  .checklist h2 {
+    color: #6ee7b7 !important;
+  }
+
+  .checklist li {
+    color: #f1f5f9 !important;
+    border-bottom-color: #334155 !important;
+  }
+
+  .video-container {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  hr {
+    border-color: #475569 !important;
+  }
+}
+
+/* Class-based dark mode */
+:global(.dark) .sdk-cards {
+  --accent-blue: #93c5fd;
+  --accent-purple: #c4b5fd;
+  --accent-green: #6ee7b7;
+  --accent-orange: #fcd34d;
+  --accent-teal: #5eead4;
+  --accent-pink: #f9a8d4;
+  --accent-indigo: #a5b4fc;
+  --accent-red: #fca5a5;
+  --accent-yellow: #fde047;
+}
+
+:global(.dark) .study-card {
+  --card-bg: #1e293b !important;
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .study-card * {
+  color: inherit;
+}
+
+:global(.dark) .study-card h3,
+:global(.dark) .study-card h4 {
+  color: var(--accent) !important;
+}
+
+:global(.dark) .study-card.small p {
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .card-content {
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .card-content p,
+:global(.dark) .card-content li,
+:global(.dark) .card-content span {
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .card-content strong {
+  color: #ffffff !important;
+}
+
+:global(.dark) .card-content table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .card-content th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .card-content td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .card-content pre {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #475569;
+}
+
+:global(.dark) .card-content code {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .card-content blockquote {
+  background: #334155 !important;
+  border-left: 3px solid var(--accent);
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .defense-layers pre {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+}
+
+:global(.dark) .comparison-table table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .comparison-table th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .comparison-table td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .term-grid table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .term-grid th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .term-grid td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) details {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) details summary {
+  color: #ffffff !important;
+}
+
+:global(.dark) details p,
+:global(.dark) details li,
+:global(.dark) details ol {
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .checklist {
+  background: #1e293b !important;
+  border: 2px solid #10b981 !important;
+}
+
+:global(.dark) .checklist h2 {
+  color: #6ee7b7 !important;
+}
+
+:global(.dark) .checklist li {
+  color: #f1f5f9 !important;
+  border-bottom-color: #334155 !important;
+}
+
+:global(.dark) .video-container {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+:global(.dark) hr {
+  border-color: #475569 !important;
+}
+`}</style>
