@@ -1,0 +1,4509 @@
+1:"$Sreact.fragment"
+2:I[466550,["/_next/static/chunks/e5e24ea30d8e5506.js","/_next/static/chunks/7f7037a3020e8af3.js","/_next/static/chunks/1da220cf8a6504ce.js"],"BlogListClient"]
+11:I[897367,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"OutletBoundary"]
+12:"$Sreact.suspense"
+3:T29d0,
+
+# 从零搭建个人 AI 工作流：理解原理、善用工具、拥有基础设施
+
+过去几周，我从「大模型到底怎么工作」一路折腾到「在 Telegram 里用对话部署开源项目」。这篇文章把我的学习和实践串成一条线，分享给同样想搭建个人 AI 工作流的人。
+
+整条路线分五步：
+
+```mermaid
+graph LR
+    A[理解原理] --> B[搞定订阅]
+    B --> C[掌握工具]
+    C --> D[搭建基础设施]
+    D --> E[对话式运维]
+
+    style A fill:#e3f2fd,stroke:#1565c0,color:#000
+    style B fill:#fff3e0,stroke:#e65100,color:#000
+    style C fill:#e8f5e9,stroke:#2e7d32,color:#000
+    style D fill:#f3e5f5,stroke:#6a1b9a,color:#000
+    style E fill:#fce4ec,stroke:#c62828,color:#000
+```
+
+---
+
+## 第一步：搞懂 AI 到底在干什么
+
+很多人（包括之前的我）对大模型的理解停留在「它很聪明，能回答问题」。但要真正用好 AI，得先破除几个误解。
+
+### 大模型不认识字
+
+它本质上是一个巨大的数学函数，跑的全是矩阵运算。人类的文字要靠 Tokenizer（翻译官）转成数字才能喂给它。所以 Token 才是大模型处理文本的最基本单元，而不是「词」或「字」。
+
+一个直观的数据：1 个 Token 大约等于 0.75 个英文单词，或 1.5-2 个汉字。**这就是为什么中文消耗 Token 更多。**
+
+### 大模型没有记忆
+
+你以为它记住了之前说的话？其实是程序每次都把历史对话打包重新发送。所谓的「记忆」只是 Context（临时记忆体），而且有上限——这就是 Context Window。
+
+### 它不会主动「做事」
+
+大模型只会输出「我想调用天气工具」这段文字，真正动手的是外部平台。它是出主意的军师，不是干活的工兵。
+
+理解了这三点，整个 AI 技术栈就清晰了：
+
+| 层级 | 概念 | 解决的痛点 |
+|------|------|-----------|
+| 底层 | LLM + Token | 让机器能处理语言 |
+| 记忆层 | Context + Context Window | 让模型「记住」对话历史 |
+| 指令层 | Prompt（User + System） | 让模型按要求输出 |
+| 能力层 | Tool + MCP | 让模型感知和影响外部世界 |
+| 自主层 | Agent | 让模型自主规划多步任务 |
+| 定制层 | Agent Skill | 让 Agent 按你的私人规则干活 |
+
+其中 MCP（Model Context Protocol）值得单独说一句：**它相当于 AI 界的 Type-C 接口**。以前每个平台接工具都要重新写代码，有了 MCP 统一标准，开发者只写一次就能到处用。这个标准正在快速普及。
+
+---
+
+## 第二步：搞定 Claude 订阅（少走弯路）
+
+理解了原理，下一步是选工具。目前我的主力是 Claude，但订阅这件事坑不少。
+
+### 支付
+
+最省心的方案是**苹果内购**：美区 Apple ID + 礼品卡。礼品卡在支付宝 PockytShop 或 Apple 美区官网都能买。
+
+虚拟信用卡也行，但卡段很关键——不是随便一张都能过。不想折腾可以试 bewild.ai，一站式解决支付问题。
+
+**闲鱼买会员要谨慎**，翻车案例太多了。
+
+### 网络环境
+
+这是重中之重：
+
+- **支付时**要求严格：住宅 IP 必须安排上，账单地址和 IP 所在地要一致，不一致直接风控拦截
+- **日常使用**相对宽松：普通工具开增强模式即可，走虚拟网卡避免 DNS 泄漏
+
+### 防封号
+
+1. 新号别急着开 Pro，**先养号至少两周**
+2. 别全程中文对话，英文更安全
+3. 系统时区和语言改成美区对应的
+4. 不要在北京时间活跃时段疯狂使用
+5. 节点要干净：自建 > 共享，住宅 > 机房
+
+---
+
+## 第三步：用好 Claude Code
+
+订阅搞定后，Claude Code 是目前我用过的最强 AI 编程工具。它不是聊天机器人——它能自己读代码、改代码、跑测试、部署上线。你只需要当甲方提需求。
+
+### 三个核心心法
+
+**1. 别追求一次完美，要追求试错速度**
+
+AI 的价值不是一次性 100% 做对，而是光速输出 80%，然后通过测试验证循环逼近完美。**搭好反馈闭环比写完美提示词重要 100 倍。**
+
+**2. 上下文管理 = 省钱 + 提智商**
+
+Token 不是无限的。塞太多信息进去，AI 反而变笨。精简提示词 + 按需加载才是王道。
+
+**3. 并行开发，效率翻倍**
+
+一个 AI 不够用？用子代理 + Git 分支，同时让多个 Claude 干不同的活。
+
+### 十个实用技巧
+
+**入门级**
+
+- **`claude.md` 是项目大脑**：放在根目录，每次对话自动加载。控制在 200-500 行，最重要的规则放最前面
+- **`/init` 一键生成项目配置**：新项目第一件事就是跑这个
+- **Plan Mode**：写代码前先进计划模式，花 1 分钟规划省 10 分钟返工
+
+**进阶级**
+
+- **Skills 技能系统**：把工作 SOP 写成 Markdown 放进 `.claude/skills/`，按需加载只占几十个 Token。**有 SOP 就有 Skill**
+- **Sub-agents 子代理**：让主 AI 派小弟去干脏活累活。推荐三大子代理：研究员、代码审查员、QA 测试员
+- **`/compact` 压缩上下文**：对话太长时一键压缩，防止「上下文腐烂」
+
+**高阶级**
+
+- **Git Worktrees 并行开发**：不同功能放不同分支文件夹，同时开多个实例
+- **MCP 能力扩展**：让 AI 直接操作浏览器、调用外部软件。但注意有些 MCP 很吃 Token，成熟操作建议转成 Skills
+- **Auto-research**：给 AI 一个优化指标，让它自己跑 A/B 测试、自我进化
+
+### 避坑清单
+
+- 别把完整 API 文档塞进 claude.md → 用 Skills 按需加载
+- 别让 AI 重复犯错 → 让它把正确规则写进 claude.md
+- 别只靠 AI 生成不验证 → 搭建截图循环 + TDD 测试
+- AI 生成的支付/用户数据代码 → **绝对不能直接上线，必须人工审计**
+
+---
+
+## 第四步：搭建自己的 AI 基础设施
+
+云端工具虽好，但数据在别人手里。如果你有一台闲置服务器（哪怕是最便宜的 VPS），完全可以搭建私有化的 AI 基础设施。
+
+我用的方案是 **OpenClaw**——一个开源 AI Gateway，把 Claude、DeepSeek 等大模型统一接入各种终端。部署完成后你会得到：
+
+- 私有 AI 助手 7×24 在线
+- 支持多模型自动降级（主力挂了自动切备用）
+- Web Dashboard 可视化管理
+- **数据全程在自己服务器上，不依赖任何第三方**
+
+### 核心部署步骤
+
+完整流程 10 步，这里提炼最关键的几步：
+
+**1. 创建数据目录并处理权限**
+
+很多教程不提这步，但在 SELinux enforcing 模式下不做就会翻车：
+
+```bash
+mkdir -p /root/.openclaw/{workspace,credentials,agents}
+chown -R 1000:1000 /root/.openclaw           # 容器内 node 用户 uid=1000
+chcon -Rt svirt_sandbox_file_t /root/.openclaw # SELinux 上下文
+```
+
+**2. 手写配置文件**
+
+跳过交互式向导，直接写 `openclaw.json`。核心是配好三件事：Gateway 认证、消息通道、模型端点。
+
+**模型接入推荐用 sub2api**——它可以把多个订阅账号的 API 聚合成一个统一端点，自动做负载均衡和故障转移。你只需要把各家的 API Key 配进 sub2api，然后 OpenClaw 只对接 sub2api 这一个地址就行，管理起来非常省心。
+
+模型推荐 **Claude Opus 4.6**（当前最强模型），复杂推理、代码生成、长文写作全面领先。日常对话可以用 Sonnet 4.6 省成本，遇到硬问题再切 Opus。
+
+```json
+{
+  "models": {
+    "providers": {
+      "anthropic": {
+        "baseUrl": "https://{your-sub2api-address}",
+        "apiKey": "你的统一 API Key",
+        "api": "openai-chat",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "contextWindow": 200000,
+            "maxTokens": 16384
+          },
+          {
+            "id": "claude-sonnet-4-6",
+            "name": "Claude Sonnet 4.6",
+            "contextWindow": 200000,
+            "maxTokens": 16384
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-opus-4-6",
+        "fallbacks": ["anthropic/claude-sonnet-4-6"]
+      }
+    }
+  }
+}
+```
+
+**3. 启动并验证**
+
+```bash
+OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest" docker compose up -d openclaw-gateway
+curl -fsS http://127.0.0.1:18789/healthz
+```
+
+### 踩坑记录
+
+| 问题 | 原因 | 解决 |
+|------|------|------|
+| 容器内配置文件读不到 | SELinux 拦截 | `chcon -Rt svirt_sandbox_file_t` |
+| Permission denied | 文件 owner 不对 | `chown -R 1000:1000` |
+| JSON 解析失败 | 手写 JSON 格式错误 | `python3 -m json.tool` 验证 |
+| 防火墙规则不生效 | 忘了 reload | `firewall-cmd --reload` |
+
+---
+
+## 第五步：用对话管理一切
+
+OpenClaw 跑起来之后，最让我兴奋的不是聊天——而是**用对话部署开源项目**。
+
+以前部署一个服务的流程：SSH 登录 → 查文档 → 写 docker-compose → 处理报错 → 配反代 → 配自启……
+
+现在的流程：
+
+```
+我：帮我部署 sub2api，用 Docker，映射到 8080 端口
+
+龙虾：好的，我来处理。正在拉取镜像…
+      ✅ 镜像拉取完成
+      正在创建容器…
+      ✅ 容器已启动，端口 8080 已映射
+      需要配置反代或开机自启吗？
+
+我：加上开机自启
+
+龙虾：✅ 已设置 restart: unless-stopped
+```
+
+整个过程没有一行命令是我手打的。
+
+这个模式的本质是：**把「命令式运维」变成「意图表达」**。服务器不再是我要「登进去操作」的对象，而是 AI 帮我打理的基础设施。我保有完整控制权，只是操作方式变了。
+
+理论上任何能 Docker 化的项目都可以这样部署：API 代理、订阅管理、自建密码库、数据看板……前提是接入的模型具备代码执行能力，且 `tools.exec` 配置为 `ask`（每次执行征询确认）。
+
+---
+
+## 写在最后
+
+回顾这条路线：
+
+1. **理解原理**——知道 Token、Context、Tool、Agent 分别在解决什么问题
+2. **搞定订阅**——选对支付方式和网络环境，避免封号
+3. **掌握工具**——用 Claude Code 的 Skills、Sub-agents、MCP 提升开发效率
+4. **搭建基础设施**——Docker 部署 OpenClaw，拥有私有化 AI 助手
+5. **对话式运维**——用自然语言管理服务器，降低运维摩擦
+
+每一步都不复杂，但串起来就是一个完整的个人 AI 工作流。
+
+最大的感受是：**AI 的价值不在于回答多少问题，而在于你能让它接入多深的工作场景**。从写代码到管服务器，从读文档到部署项目——把 AI 嵌入日常工作流的每个环节，才是真正的效率跃迁。
+4:T274c,
+import { Card, CardGrid } from '@/components/Card';
+
+<div className="sdk-cards">
+
+<div className="video-container">
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/TqC1qOfiVcQ"
+  title="Claude Agent SDK"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+</div>
+
+---
+
+## 核心架构
+
+<div className="card-grid cols-3">
+
+<div className="study-card accent-blue">
+<div className="card-icon">🔄</div>
+<h3>智能体循环</h3>
+<div className="card-content">
+
+**收集** → **执行** → **验证** → 循环
+
+- 收集：搜索、读取、子智能体
+- 执行：Bash、工具、代码生成
+- 验证：规则、视觉、LLM
+
+</div>
+</div>
+
+<div className="study-card accent-purple">
+<div className="card-icon">🛠️</div>
+<h3>Bash = 超级工具</h3>
+<div className="card-content">
+
+**"第一代码模式"**
+
+```bash
+tail -f log | grep ERROR
+```
+
+通用 + 可组合 + 动态脚本
+
+</div>
+</div>
+
+<div className="study-card accent-green">
+<div className="card-icon">🔌</div>
+<h3>MCP 协议</h3>
+<div className="card-content">
+
+**标准化外部集成**
+
+Agent ⟷ MCP ⟷ Slack/GitHub/...
+
+即插即用，自动认证
+
+</div>
+</div>
+
+</div>
+
+---
+
+## 关键组件
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-orange">
+<div className="card-icon">👥</div>
+<h3>子智能体</h3>
+<div className="card-content">
+
+| 优势 | 说明 |
+|:--:|:--|
+| ⚡ | 并行处理多任务 |
+| 📦 | 隔离上下文，返回摘要 |
+
+> 像研究团队的初级成员
+
+</div>
+</div>
+
+<div className="study-card accent-teal">
+<div className="card-icon">📝</div>
+<h3>技能系统</h3>
+<div className="card-content">
+
+| 本质 | 文件夹形式的指令集 |
+|:--:|:--|
+| 机制 | 渐进式上下文披露 |
+| 场景 | 前端设计、文档生成 |
+
+</div>
+</div>
+
+</div>
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-pink">
+<div className="card-icon">🗜️</div>
+<h3>Compact 压缩</h3>
+<div className="card-content">
+
+**问题**：长对话耗尽上下文
+
+**方案**：自动总结历史消息
+
+监测 → 触发 → 摘要 → 继续
+
+</div>
+</div>
+
+<div className="study-card accent-indigo">
+<div className="card-icon">💻</div>
+<h3>代码生成</h3>
+<div className="card-content">
+
+**为什么是核心能力？**
+
+✅ 精确可预测
+✅ 可组合复用
+✅ 处理复杂操作
+
+</div>
+</div>
+
+</div>
+
+---
+
+## 安全模型
+
+<div className="study-card wide accent-red">
+<div className="card-icon">🧀</div>
+<h3>瑞士奶酪防御</h3>
+<div className="card-content defense-layers">
+
+```
+输入 → [模型对齐] → [工具权限] → [沙盒环境] → 安全输出
+         防恶意        解析控制       限制影响
+```
+
+**单层有漏洞，多层叠加确保安全**
+
+</div>
+</div>
+
+<div className="card-grid cols-3">
+
+<div className="study-card small accent-green">
+<h4>规则检查</h4>
+<p>⭐⭐⭐ 快 | 代码/结构数据</p>
+</div>
+
+<div className="study-card small accent-yellow">
+<h4>视觉反馈</h4>
+<p>⭐⭐ 中 | UI/格式化</p>
+</div>
+
+<div className="study-card small accent-orange">
+<h4>LLM 评判</h4>
+<p>⭐ 慢 | 主观质量</p>
+</div>
+
+</div>
+
+---
+
+## 智能体 vs 工作流
+
+<div className="comparison-table">
+
+| | 🤖 智能体 | 📋 工作流 |
+|:--|:--|:--|
+| **输入** | 模糊自然语言 | 明确定义 |
+| **轨迹** | 自主决定 | 预设路径 |
+| **场景** | 探索性任务 | 流程化任务 |
+| **例子** | Claude Code | CI/CD |
+
+</div>
+
+---
+
+## 术语速查
+
+<div className="term-grid">
+
+| 术语 | 一句话定义 |
+|:--|:--|
+| **智能搜索** | 用 grep/tail 主动搜索文件 |
+| **Hooks** | 运行时的确定性验证/插入 |
+| **Compact** | 自动总结防止上下文耗尽 |
+| **上下文工程** | 通过环境结构优化性能 |
+| **Tools** | 原子操作的定义 |
+
+</div>
+
+---
+
+## 自测问答
+
+<details>
+<summary>❓ SDK 的核心设计原则？</summary>
+
+通过终端让智能体访问计算机，使用人类相同的工具。
+
+</details>
+
+<details>
+<summary>❓ 为什么 Bash 最强大？</summary>
+
+通用 + 可组合 + 存储结果 + 动态脚本 + 复用现有软件
+
+</details>
+
+<details>
+<summary>❓ 子智能体的两大优势？</summary>
+
+1. 并行化处理
+2. 隔离上下文，只返回关键信息
+
+</details>
+
+<details>
+<summary>❓ 三种验证方法的选择？</summary>
+
+- 代码 → 规则检查（TypeScript/ESLint）
+- UI → 视觉反馈（截图）
+- 主观内容 → LLM 评判（谨慎）
+
+</details>
+
+---
+
+<div className="checklist">
+
+## 学习进度
+
+- [ ] 智能体循环三阶段
+- [ ] Bash 的核心优势
+- [ ] 子智能体与上下文管理
+- [ ] MCP 协议作用
+- [ ] 瑞士奶酪防御模型
+- [ ] 验证方法选择
+
+</div>
+
+</div>
+
+<style>{`
+.video-container {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe {
+  display: block;
+}
+
+.sdk-cards {
+  --card-radius: 12px;
+  --sdk-blue: #3b82f6;
+  --sdk-purple: #8b5cf6;
+  --sdk-green: #10b981;
+  --sdk-orange: #f59e0b;
+  --sdk-teal: #14b8a6;
+  --sdk-pink: #ec4899;
+  --sdk-indigo: #6366f1;
+  --sdk-red: #ef4444;
+  --sdk-yellow: #eab308;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid.cols-2,
+  .card-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.study-card {
+  background: var(--card);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  border-left: 4px solid var(--sdk-accent, var(--sdk-blue));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.study-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.study-card.wide {
+  grid-column: 1 / -1;
+}
+
+.study-card.small {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.study-card.small h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.study-card.small p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--foreground) !important;
+}
+
+.study-card.accent-blue { --sdk-accent: var(--sdk-blue); }
+.study-card.accent-purple { --sdk-accent: var(--sdk-purple); }
+.study-card.accent-green { --sdk-accent: var(--sdk-green); }
+.study-card.accent-orange { --sdk-accent: var(--sdk-orange); }
+.study-card.accent-teal { --sdk-accent: var(--sdk-teal); }
+.study-card.accent-pink { --sdk-accent: var(--sdk-pink); }
+.study-card.accent-indigo { --sdk-accent: var(--sdk-indigo); }
+.study-card.accent-red { --sdk-accent: var(--sdk-red); }
+.study-card.accent-yellow { --sdk-accent: var(--sdk-yellow); }
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--sdk-accent) !important;
+}
+
+.study-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--sdk-accent) !important;
+}
+
+.card-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--foreground) !important;
+}
+
+.card-content p,
+.card-content li,
+.card-content span {
+  color: var(--foreground) !important;
+}
+
+.card-content strong {
+  color: var(--foreground) !important;
+  font-weight: 600;
+}
+
+.card-content table {
+  width: 100%;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.card-content th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.card-content td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.card-content pre {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.card-content code {
+  background: var(--card);
+  color: var(--accent);
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+}
+
+.card-content blockquote {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  background: var(--card);
+  border-left: 3px solid var(--sdk-accent);
+  color: var(--foreground) !important;
+}
+
+.defense-layers pre {
+  text-align: center;
+  background: transparent !important;
+  border: none !important;
+  font-size: 0.85rem;
+  color: var(--foreground) !important;
+}
+
+.comparison-table {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
+.comparison-table th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.comparison-table td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.term-grid {
+  margin: 1rem 0;
+}
+
+.term-grid table {
+  width: 100%;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+}
+
+.term-grid th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.term-grid td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+details summary {
+  font-weight: 500;
+  user-select: none;
+  color: var(--foreground) !important;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+details p,
+details li,
+details ol {
+  color: var(--foreground) !important;
+}
+
+.checklist {
+  background: var(--card);
+  border: 2px solid var(--success);
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  margin-top: 2rem;
+}
+
+.checklist h2 {
+  margin-top: 0;
+  color: var(--success) !important;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border);
+  color: var(--foreground) !important;
+}
+`}</style>
+5:T2f3d,
+# Claude Agent SDK 入门指南：让你的 AI 拥有一台电脑
+
+欢迎来到 AI 智能体的世界！本指南专为学生、爱好者以及所有想要了解如何使用 Anthropic 的 Claude Agent SDK 构建强大 AI 助手的新手设计。
+
+SDK 背后的核心理念简单而强大：**它的目的是"给你的智能体一台电脑"**。这意味着让 Claude 这样的 AI 能够与文件交互、运行命令、使用数字工具，就像人类处理任务时所做的那样。
+
+```mermaid
+mindmap
+  root((Claude Agent SDK))
+    核心理念
+      给 AI 一台电脑
+      文件交互
+      命令执行
+      工具使用
+    三个阶段
+      收集上下文
+      执行操作
+      验证结果
+    核心能力
+      智能搜索
+      代码生成
+      MCP 集成
+      自我纠错
+```
+
+## 智能体工作流：三步循环
+
+任何有效 AI 智能体的核心都是一个称为**"智能体循环"**的基本反馈过程。这是一个持续的三步循环，智能体通过它来理解问题、执行解决方案并检查自身表现。
+
+```mermaid
+graph LR
+    A[1. 收集上下文] --> B[2. 执行操作]
+    B --> C[3. 验证结果]
+    C -->|循环| A
+
+    style A fill:#4fc3f7,stroke:#0288d1,color:#000
+    style B fill:#ffb74d,stroke:#f57c00,color:#000
+    style C fill:#81c784,stroke:#388e3c,color:#000
+```
+
+| 阶段 | 目的 | 核心问题 |
+|------|------|----------|
+| **收集上下文** | 研究与理解 | 我需要知道什么？ |
+| **执行操作** | 执行与实现 | 我如何完成这个任务？ |
+| **验证结果** | 验证与纠正 | 我成功了吗？ |
+
+在本指南中，我们将以构建一个智能**"邮件助手"**为例，说明这些概念在实践中是如何工作的。
+
+## 第一步：收集上下文 - 智能体需要知道什么
+
+在智能体采取行动之前，它必须首先通过收集所有相关信息来理解情况。这是工作的研究阶段。
+
+```mermaid
+flowchart TB
+    subgraph Context["收集上下文"]
+        AS[智能搜索]
+        SS[语义搜索]
+        SA[子智能体]
+        CP[上下文压缩]
+    end
+
+    AS --> |"精确文本匹配"| Info[(信息)]
+    SS --> |"概念匹配"| Info
+    SA --> |"并行研究"| Info
+    CP --> |"摘要管理"| Info
+
+    Info --> Agent((智能体))
+```
+
+### 智能搜索与文件系统：数字图书管理员
+
+文件系统——计算机上的所有文件夹和文件——充当智能体的潜在信息库。通过**智能搜索（Agentic Search）**，智能体就像一个数字图书管理员。它不仅知道书籍的存在，还能亲自去书架取书（文件），并使用 `grep` 等工具在其中查找特定的文本行。
+
+> 例如，我们的邮件助手可以搜索名为 `Conversations` 的文件夹，找到过去的讨论记录，并在起草回复之前获取重要的上下文。
+
+### 语义搜索：寻找想法，而非仅仅是词语
+
+**语义搜索（Semantic Search）**是一种不同的方法，智能体搜索的是概念和含义，而不仅仅是精确的文本匹配。这就像图书管理员使用一个能理解主题的智能目录系统，即使用户搜索的词语不完全匹配，也能找到相关的书籍。
+
+### 搜索方法对比
+
+| 特性 | 智能搜索 | 语义搜索 |
+|------|----------|----------|
+| **速度** | 较慢 | 通常更快 |
+| **准确性** | 更准确、更透明 | 准确性较低、透明度较低 |
+| **维护难度** | 实现更简单 | 维护更困难 |
+| **最佳场景** | 精确检索的默认选择 | 速度或概念匹配更重要时 |
+
+> **关键建议**：从智能搜索开始，只有在需要更快结果或更多变体时才添加语义搜索。
+
+### 子智能体：委派研究任务
+
+你可以把**子智能体（Subagent）**想象成团队中的初级研究员。主研究员（主智能体）可以将特定的研究任务委派给多个初级研究员（子智能体），然后他们只汇报关键发现。
+
+```mermaid
+flowchart TB
+    Main[主智能体<br/>首席研究员]
+
+    Main -->|委派| Sub1[子智能体 1<br/>搜索邮件]
+    Main -->|委派| Sub2[子智能体 2<br/>搜索日历]
+    Main -->|委派| Sub3[子智能体 3<br/>搜索文档]
+
+    Sub1 -->|关键发现| Main
+    Sub2 -->|关键发现| Main
+    Sub3 -->|关键发现| Main
+```
+
+**两大优势：**
+
+1. **并行化**：多个子智能体同时处理不同任务，大幅加速研究过程
+2. **上下文管理**：每个子智能体独立运行，只将相关摘要发送回主智能体
+
+### 上下文压缩：保持对话聚焦
+
+`compact` 功能是管理长时间对话的自动工具。把它想象成一个会议助理，随着对话进行自动进行摘要，确保智能体始终记住要点而不超出上下文限制。
+
+## 第二步：执行操作 - 智能体如何完成任务
+
+这个阶段是智能体使用各种能力执行任务、朝着完成目标前进的阶段。
+
+```mermaid
+flowchart LR
+    subgraph Actions["执行操作"]
+        T[工具]
+        B[Bash 脚本]
+        C[代码生成]
+        M[MCP 协议]
+    end
+
+    Agent((智能体)) --> T
+    Agent --> B
+    Agent --> C
+    Agent --> M
+
+    T -->|"主要技能"| Result
+    B -->|"命令行"| Result
+    C -->|"自定义方案"| Result
+    M -->|"外部服务"| Result
+
+    Result((结果))
+```
+
+### 工具：智能体的主要技能
+
+**"工具（Tools）"**是智能体设计用来执行的主要预定义操作。这些是它在决定如何处理任务时首先考虑的技能。
+
+```typescript
+// 示例：邮件助手的主要工具
+const emailAgentTools = {
+  fetchInbox: () => { /* 获取收件箱消息 */ },
+  searchEmails: (query: string) => { /* 搜索邮件历史 */ },
+  sendEmail: (to: string, subject: string, body: string) => { /* 发送邮件 */ },
+  createDraft: (to: string, subject: string, body: string) => { /* 保存草稿 */ }
+};
+```
+
+### Bash 脚本：万能工具箱
+
+使用 **Bash** 的能力让智能体能够访问计算机的命令行，这相当于一个灵活的万能工具箱，可以完成各种各样的任务。
+
+```bash
+# 示例：智能体处理邮件附件
+# 1. 下载 PDF
+curl -o attachment.pdf "https://example.com/file.pdf"
+
+# 2. 转换为纯文本
+pdftotext attachment.pdf attachment.txt
+
+# 3. 搜索特定信息
+grep -i "合同条款" attachment.txt
+```
+
+### 代码生成：创造性超能力
+
+Claude Agent SDK 擅长生成代码。这不仅仅是一个功能；它是一个**核心设计原则**。
+
+> **为什么代码生成如此重要**："代码是精确的、可组合的、可无限复用的，这使它成为需要可靠执行复杂操作的智能体的理想输出。"
+
+当你让 Claude.AI 创建复杂文件时，它完全依赖代码生成——在后台编写 Python 脚本来构建格式完美的 Excel 电子表格和 PowerPoint 演示文稿。
+
+### MCP（模型上下文协议）：即插即用的连接
+
+把 **MCP** 想象成智能体的万能转换插头。这个协议让你的智能体能够轻松连接到许多不同的外部服务，而无需为每个服务编写自定义集成代码。
+
+```mermaid
+flowchart TB
+    Agent((智能体))
+
+    subgraph MCP["MCP 协议"]
+        Slack[Slack]
+        Drive[Google Drive]
+        Asana[Asana]
+        GitHub[GitHub]
+        More[...]
+    end
+
+    Agent <-->|"标准化协议"| MCP
+
+    Slack -->|search_slack_messages| Agent
+    Drive -->|get_drive_files| Agent
+    Asana -->|get_asana_tasks| Agent
+    GitHub -->|create_pull_request| Agent
+```
+
+**优势：**
+- 专注于智能体行为，而非集成代码
+- 只需调用 `search_slack_messages` 或 `get_asana_tasks` 等工具
+- MCP 自动处理所有复杂的集成工作
+
+## 第三步：验证结果 - 智能体如何自我纠正
+
+可靠的智能体不仅仅是行动；它们还会评估自己的输出，以发现错误、进行纠正并随时间改进。
+
+```mermaid
+flowchart TB
+    Output[智能体输出]
+
+    Output --> Rules[规则检查]
+    Output --> Visual[视觉反馈]
+    Output --> LLM[LLM 评判]
+
+    Rules -->|"代码检查、类型检查"| Verified
+    Visual -->|"截图分析"| Verified
+    LLM -->|"主观评估"| Verified
+
+    Verified{通过？}
+    Verified -->|是| Done[完成]
+    Verified -->|否| Retry[修正后重试]
+    Retry --> Output
+```
+
+### 三种检查方法
+
+#### 1. 定义规则（推荐）
+
+这就像使用语法或拼写检查器。你提供清晰、具体的规则来定义什么是"好的"输出。
+
+```typescript
+// 示例：TypeScript + Linting 实现稳健验证
+// 不要只是生成 JavaScript...
+
+// 生成带严格类型检查的 TypeScript
+const generatedCode = agent.generateTypeScript(task);
+
+// 运行 linting 自动捕获错误
+const lintResults = eslint.verify(generatedCode);
+
+// 多层反馈！
+if (lintResults.errors.length > 0) {
+  agent.retry(lintResults.errors);
+}
+```
+
+> **专业提示**：生成 TypeScript 并进行 lint 检查。相比纯 JavaScript，这提供了多层额外的反馈。
+
+#### 2. 视觉反馈
+
+如果智能体的任务是视觉相关的，比如格式化 HTML 邮件，可以向它展示最终结果的截图。智能体可以分析图像，检查布局、样式和内容是否正确。
+
+#### 3. LLM 作为评判（谨慎使用）
+
+这就像从同事那里获得第二意见，另一个 AI 模型根据主观标准（如语气或风格）来"评判"输出。
+
+> **警告**：这"通常不是一个非常稳健的方法，并且可能有很大的延迟代价。"只在即使很小的性能提升也值得付出代价的情况下考虑使用这种高级技术。
+
+### 验证方法对比
+
+| 方法 | 可靠性 | 速度 | 最适合 |
+|------|--------|------|--------|
+| **基于规则** | 高 | 快 | 代码、结构化数据 |
+| **视觉反馈** | 中 | 中 | UI、格式化 |
+| **LLM 评判** | 低 | 慢 | 主观质量 |
+
+## 完整示例：邮件助手
+
+让我们看看这三个阶段如何在邮件助手示例中协同工作：
+
+```mermaid
+sequenceDiagram
+    participant 用户
+    participant Agent as 邮件助手
+    participant Search as 搜索工具
+    participant Action as 操作工具
+    participant Verify as 验证
+
+    用户->>Agent: "回复张三关于项目的邮件"
+
+    rect rgb(225, 245, 254)
+        Note over Agent,Search: 阶段 1：收集上下文
+        Agent->>Search: 搜索张三的邮件
+        Search-->>Agent: 找到 5 封相关邮件
+        Agent->>Search: 搜索项目文档
+        Search-->>Agent: 找到项目时间表
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Agent,Action: 阶段 2：执行操作
+        Agent->>Action: 根据上下文起草回复
+        Action-->>Agent: 邮件草稿已创建
+    end
+
+    rect rgb(232, 245, 233)
+        Note over Agent,Verify: 阶段 3：验证结果
+        Agent->>Verify: 检查语气和完整性
+        Verify-->>Agent: 通过
+    end
+
+    Agent->>用户: "这是您的回复草稿"
+```
+
+## 开始你的旅程
+
+Claude Agent SDK 让构建强大的自主智能体变得前所未有的简单。通过给你的 AI 提供计算机访问权限和可靠的三步工作流——**收集上下文、执行操作和验证结果**——你可以创建能够处理各种数字任务的助手。
+
+### 快速入门清单
+
+```
+1. [ ] 安装 Claude Agent SDK
+2. [ ] 定义智能体的主要工具
+3. [ ] 设置上下文收集方法
+4. [ ] 配置验证规则
+5. [ ] 先用简单任务测试
+6. [ ] 迭代和改进
+```
+
+### 关键要点
+
+| 原则 | 实践方法 |
+|------|----------|
+| 从简单开始 | 先使用智能搜索，再考虑语义搜索 |
+| 使用子智能体 | 为复杂任务并行化研究 |
+| 生成代码 | 利用代码实现精确、可复用的操作 |
+| 验证一切 | 基于规则的检查 > LLM 评判 |
+| 持续迭代 | 智能体循环就是持续改进 |
+
+---
+
+## 参考资料
+
+- [Claude Agent SDK Documentation](https://docs.anthropic.com/en/docs/agents-and-tools/claude-agent-sdk) - Anthropic Docs
+- [Building effective agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
+
+---
+
+*准备好构建你的第一个 AI 智能体了吗？Claude Agent SDK 是你创建能够真正与数字世界交互的智能助手的起点。*
+6:T2a5e,
+# 2026 香港银行开户完全指南
+
+随着全球化的深入和跨境业务的增加，拥有一个香港银行账户变得越来越重要。无论你是为了投资港美股、接收海外收入，还是为了资产配置，这篇教程都将帮助你顺利开户。
+
+![香港金融中心](https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=800&auto=format&fit=crop&q=60)
+
+## 为什么需要香港银行账户？
+
+香港作为国际金融中心，拥有独特的优势：
+
+```mermaid
+mindmap
+  root((香港银行账户优势))
+    投资便利
+      港股直投
+      美股投资
+      基金申购
+    资金流动
+      跨境转账便捷
+      外汇自由兑换
+      多币种账户
+    资产配置
+      美元资产
+      离岸储蓄
+      保险购买
+    商业用途
+      外贸收款
+      公司账户
+      PayPal提现
+```
+
+### 主要用途场景
+
+| 场景 | 具体需求 | 推荐银行 |
+|------|----------|----------|
+| 港美股投资 | 券商出入金 | 汇丰、中银香港 |
+| 海外收入 | 自由职业/远程工作 | 众安、ZA Bank |
+| 跨境电商 | PayPal、外贸收款 | 中银香港、渣打 |
+| 资产配置 | 美元储蓄、保险 | 汇丰卓越、花旗 |
+
+## 香港主流银行对比
+
+```mermaid
+graph TB
+    subgraph 传统银行
+        A[汇丰银行 HSBC]
+        B[中银香港 BOCHK]
+        C[恒生银行]
+        D[渣打银行]
+    end
+
+    subgraph 虚拟银行
+        E[ZA Bank 众安]
+        F[天星银行]
+        G[WeLab Bank]
+        H[Mox Bank]
+    end
+
+    subgraph 选择建议
+        I{你的需求?}
+        I -->|大额资金/综合服务| A
+        I -->|内地关联/熟悉度| B
+        I -->|快速开户/小额| E
+        I -->|投资理财| C
+    end
+```
+
+### 银行详细对比
+
+#### 传统银行
+
+| 银行 | 开户门槛 | 管理费 | 优势 | 劣势 |
+|------|----------|--------|------|------|
+| **汇丰银行** | 1万港币 | 有条件免 | 国际认可度高，网点多 | 门槛较高，审核严 |
+| **中银香港** | 较低 | 低 | 内地关联好，中文服务 | 国际转账稍慢 |
+| **恒生银行** | 中等 | 有条件免 | 投资产品丰富 | 非港人开户难 |
+| **渣打银行** | 中等 | 有条件免 | 国际网络好 | 网点较少 |
+
+#### 虚拟银行（推荐新手）
+
+| 银行 | 开户方式 | 特点 | 适合人群 |
+|------|----------|------|----------|
+| **ZA Bank** ⭐ | 纯线上 | 开户最快，界面友好，无管理费 | 初次开户者 |
+| **天星银行** | 纯线上 | 小米生态，汇率好 | 小米用户 |
+| **Mox Bank** | 纯线上 | 渣打背景，稳定 | 稳健型用户 |
+
+> 💡 **新手首选推荐**：如果你是第一次开香港银行账户，强烈推荐 **ZA Bank 众安银行**。全程线上操作，无需亲赴香港，无最低存款要求，零账户管理费，最快当天就能开户成功。
+
+## 开户方式选择
+
+```mermaid
+flowchart TD
+    A[选择开户方式] --> B{是否方便赴港?}
+    B -->|是| C[线下开户]
+    B -->|否| D{资金需求大小?}
+
+    C --> C1[传统银行柜台]
+    C --> C2[虚拟银行+线下认证]
+
+    D -->|大额/综合需求| E[见证开户]
+    D -->|小额/临时需求| F[纯线上虚拟银行]
+
+    C1 --> G[✅ 全功能账户]
+    E --> H[✅ 远程开通传统银行]
+    F --> I[✅ 快速开通基础账户]
+
+    style G fill:#90EE90
+    style H fill:#90EE90
+    style I fill:#90EE90
+```
+
+### 三种开户方式详解
+
+#### 方式一：亲赴香港开户（推荐）
+
+**优点**：成功率最高、功能最全、服务最好
+
+**流程**：
+1. 提前预约（非常重要！）
+2. 携带材料赴港
+3. 银行面谈（约30-60分钟）
+4. 当场或邮寄收卡
+
+#### 方式二：内地见证开户
+
+**适用银行**：汇丰、中银香港、招商永隆等
+
+**流程**：
+1. 在指定内地网点预约
+2. 完成视频/现场见证
+3. 香港方面审核
+4. 邮寄卡片和密码器
+
+#### 方式三：线上开户（虚拟银行）
+
+**适用银行**：ZA Bank、天星银行、Mox等
+
+**流程**：
+1. 下载 App 注册
+2. 上传证件照片
+3. 人脸识别验证
+4. 等待审核（通常1-3天）
+
+## 开户材料清单
+
+```mermaid
+graph LR
+    subgraph 必备材料
+        A[身份证]
+        B[港澳通行证/护照]
+        C[过关小票]
+        D[地址证明]
+    end
+
+    subgraph 辅助材料
+        E[工作证明]
+        F[收入证明]
+        G[银行流水]
+        H[投资证明]
+    end
+
+    subgraph 提高成功率
+        I[内地银行卡]
+        J[信用卡账单]
+        K[社保证明]
+        L[房产证明]
+    end
+```
+
+### 材料详细说明
+
+#### 必备材料 ✅
+
+| 材料 | 要求 | 注意事项 |
+|------|------|----------|
+| **身份证** | 原件 | 确保在有效期内 |
+| **港澳通行证** | 原件+有效签注 | 或有效护照 |
+| **过关小票** | 当天入境凭证 | 部分银行必须 |
+| **地址证明** | 3个月内 | 水电费单/银行账单 |
+
+#### 地址证明可选材料
+
+- 📧 内地银行信用卡账单
+- 💡 水电费缴费单
+- 📱 手机话费账单
+- 🏠 居住证明（居委会开具）
+- 🏦 银行存款证明
+
+> **提示**：地址证明必须有你的姓名和详细地址，且在3个月以内。
+
+## 开户流程详解
+
+以最常见的**线下传统银行开户**为例：
+
+```mermaid
+sequenceDiagram
+    participant 你
+    participant 银行预约系统
+    participant 银行柜台
+    participant 银行后台
+
+    你->>银行预约系统: 1. 官网/App预约
+    银行预约系统-->>你: 确认预约时间
+
+    你->>银行柜台: 2. 携带材料赴约
+    银行柜台->>你: 3. 核验材料
+    银行柜台->>你: 4. 面谈（开户目的等）
+
+    你->>银行柜台: 5. 填写表格
+    你->>银行柜台: 6. 签名确认
+
+    银行柜台->>银行后台: 7. 提交审核
+    银行后台-->>银行柜台: 8. 审核通过
+
+    银行柜台->>你: 9. 发放银行卡
+    银行柜台->>你: 10. 设置密码/网银
+```
+
+### Step 1: 预约
+
+**为什么要预约？**
+- 非预约客户等待时间长
+- 部分银行不接受非预约客户
+- 可以选择普通话服务
+
+**预约渠道**：
+- 银行官网在线预约
+- 银行 App 预约
+- 客服电话预约
+
+### Step 2: 面谈准备
+
+银行会询问的问题：
+
+```mermaid
+graph TD
+    A[常见面谈问题] --> B[开户目的]
+    A --> C[资金来源]
+    A --> D[职业信息]
+    A --> E[预计使用金额]
+
+    B --> B1[投资/储蓄/收款]
+    C --> C1[工资/经营/投资收益]
+    D --> D1[公司名称/职位/收入]
+    E --> E1[月均存款/转账频率]
+```
+
+**回答技巧**：
+- 🎯 目的明确：投资港股、储蓄、商务往来等
+- 💰 资金合规：工资收入、投资收益、经营所得
+- 📊 符合身份：收入与职业匹配
+
+### Step 3: 激活使用
+
+开户成功后：
+1. 下载银行 App
+2. 激活网上银行
+3. 设置转账限额
+4. 绑定手机号（建议香港号）
+
+## 开户成功率提升技巧
+
+```mermaid
+pie title 开户成功因素占比
+    "材料完整度" : 30
+    "资金证明" : 25
+    "开户目的合理性" : 20
+    "面谈表现" : 15
+    "选对银行" : 10
+```
+
+### 高成功率策略
+
+#### 1. 选择合适的银行
+
+- **首次开户**：建议选择中银香港或虚拟银行
+- **有一定资产**：可以尝试汇丰、渣打
+- **急需使用**：优先虚拟银行
+
+#### 2. 材料准备充分
+
+```
+✅ 必备材料全部带齐
+✅ 地址证明在有效期内
+✅ 准备中英文材料
+✅ 多准备辅助材料
+```
+
+#### 3. 面谈表现
+
+- 着装得体，展现专业性
+- 回答清晰，不要犹豫
+- 主动说明开户目的
+- 避免敏感词汇（炒股、洗钱等）
+
+## 常见问题 FAQ
+
+### Q1: 没有香港手机号怎么办？
+
+**解决方案**：
+1. 提前购买香港电话卡（淘宝/实体店）
+2. 使用内地手机号（部分银行支持）
+3. 到港后购买当地 SIM 卡
+
+### Q2: 地址证明不符合要求？
+
+**备选方案**：
+- 信用卡电子账单打印
+- 申请银行开具存款证明
+- 使用居住证明模板
+
+### Q3: 开户被拒怎么办？
+
+```mermaid
+flowchart LR
+    A[被拒] --> B{分析原因}
+    B --> C[材料不全]
+    B --> D[资金来源不明]
+    B --> E[开户目的模糊]
+
+    C --> F[补充材料重新申请]
+    D --> G[准备收入证明]
+    E --> H[明确具体用途]
+
+    F --> I[换一家银行尝试]
+    G --> I
+    H --> I
+```
+
+### Q4: 开户后如何入金？
+
+| 入金方式 | 手续费 | 到账时间 | 限额 |
+|----------|--------|----------|------|
+| 银行电汇 | 100-200元 | 1-3工作日 | 5万美元/年 |
+| 熟人转账 | 免费 | 即时 | 无限制 |
+| 券商出金 | 视情况 | 1-2工作日 | 无限制 |
+
+## 开户后注意事项
+
+### 保持账户活跃
+
+```mermaid
+timeline
+    title 账户维护时间线
+
+    每月 : 至少一笔交易
+         : 登录网银/App
+
+    每季度 : 检查账户状态
+           : 更新联系方式
+
+    每年 : 确认账户信息
+        : 审视账户费用
+```
+
+### 避免账户被冻结
+
+- ⚠️ 避免频繁大额进出
+- ⚠️ 避免与高风险地区交易
+- ⚠️ 保持账户活跃度
+- ⚠️ 及时更新个人信息
+
+## 总结
+
+```mermaid
+graph TB
+    subgraph 开户三步走
+        A[1. 选择银行] --> B[2. 准备材料]
+        B --> C[3. 完成开户]
+    end
+
+    A --> A1[新手选虚拟银行]
+    A --> A2[综合需求选传统银行]
+
+    B --> B1[证件+地址证明]
+    B --> B2[收入/资产证明]
+
+    C --> C1[线上/线下方式]
+    C --> C2[完成激活使用]
+```
+
+开户香港银行账户并不难，关键是：
+1. **选对银行**：根据需求选择合适的银行
+2. **备齐材料**：宁多勿少，充分准备
+3. **态度诚恳**：面谈时展现真实目的
+
+祝你开户顺利！如有问题，欢迎在评论区讨论。
+
+---
+
+## 🎁 读者专属福利
+
+如果你决定选择 **ZA Bank 众安银行** 开户，这里有一份专属福利送给你：
+
+<div style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '24px', borderRadius: '12px', color: 'white', margin: '20px 0'}}>
+
+### 🏦 ZA Bank 开户奖赏
+
+**使用专属邀请码开户，享价值 HKD 2,026 奖赏！**
+
+✨ **开户福利**：
+- 💰 新客户专属迎新奖赏
+- 📈 刷卡消费享 **3% 股票回赠**
+- 🎯 无最低存款要求，零账户管理费
+
+✨ **ZA Bank 优势**：
+- ✅ 全线上开户，无需前往分行
+- ✅ 24x7 全天候银行服务
+- ✅ 界面友好，操作简单
+
+**👉 专属邀请码：`P8KX83`**
+
+[立即开户领取奖赏 →](https://l.za.group/oczrP)
+
+</div>
+
+> ⚠️ 投资涉及风险，受条款及细则约束。此资料仅可于香港境内分发或传阅。[查看完整条款](https://l.za.group/iAF3x)
+
+---
+
+*免责声明：本文仅供参考，具体开户要求以各银行官方规定为准。银行政策可能随时调整，建议开户前咨询官方客服确认最新要求。*
+7:T2d37,
+# 构建生产级多智能体 AI 系统架构指南
+
+随着单个 AI 模型能力的不断提升，性能的下一个突破点不仅在于增强单个模型，更在于扩展它们的**集体智能**。多智能体系统——多个大型语言模型协同工作，在协调循环中自主使用工具——标志着我们从线性、一次性流水线向更复杂架构的重大转变。
+
+```mermaid
+mindmap
+  root((多智能体 AI))
+    性能提升
+      相比单智能体提升 90%
+      Token 扩展解释 80% 性能差异
+      并行执行能力
+    系统架构
+      编排器-工作者模式
+      动态任务委派
+      记忆持久化
+    应用场景
+      复杂研究任务
+      开放式探索
+      跨领域分析
+```
+
+## 为什么需要多智能体系统？
+
+传统的单智能体系统在处理深度研究的动态性质时往往力不从心。知识发现不是线性的——它需要灵活地转向、探索分支，并根据中间发现更新策略。
+
+### 可量化的收益
+
+| 指标 | 结果 |
+|------|------|
+| **性能提升** | 相比单智能体提升 90.2% |
+| **Token 扩展影响** | 解释了 80% 的性能差异 |
+| **任务并行化** | 质量和速度显著提升 |
+
+多智能体系统在以下场景表现出色：
+- 高价值、复杂的任务
+- 可高度并行化的工作
+- 需要处理超出单个上下文窗口的信息
+- 需要与多种工具交互
+
+## 系统架构：编排器-工作者框架
+
+系统采用**编排器-工作者模式**，由中央主智能体协调整个研究流程，同时将特定任务委派给专门的工作智能体（子智能体）并行执行。
+
+```mermaid
+flowchart TB
+    subgraph 编排器
+        LA[主研究智能体]
+        MEM[(记忆存储)]
+    end
+
+    subgraph 工作者
+        SA1[子智能体 1]
+        SA2[子智能体 2]
+        SA3[子智能体 3]
+        SAN[子智能体 N]
+    end
+
+    subgraph 工具层
+        WS[网络搜索]
+        DB[(数据库)]
+        API[外部 API]
+    end
+
+    subgraph 后处理
+        CA[引用智能体]
+    end
+
+    用户 -->|查询| LA
+    LA -->|保存计划| MEM
+    LA -->|派生| SA1
+    LA -->|派生| SA2
+    LA -->|派生| SA3
+    LA -->|派生| SAN
+
+    SA1 --> WS
+    SA2 --> WS
+    SA3 --> DB
+    SAN --> API
+
+    SA1 -->|发现| LA
+    SA2 -->|发现| LA
+    SA3 -->|发现| LA
+    SAN -->|发现| LA
+
+    LA -->|综合| CA
+    CA -->|最终报告| 用户
+```
+
+### 核心组件
+
+| 组件 | 角色 | 职责 |
+|------|------|------|
+| **主研究智能体** | 编排器 | 分析查询、制定计划、派生子智能体、综合发现 |
+| **记忆存储** | 持久化 | 在上下文窗口外存储研究计划，支持长时间运行的任务 |
+| **子智能体** | 工作者 | 使用工具并行执行特定研究任务 |
+| **引用智能体** | 后处理器 | 审查报告并插入精确的来源引用 |
+
+### 研究工作流程
+
+```mermaid
+sequenceDiagram
+    participant 用户
+    participant 主智能体 as 主研究智能体
+    participant 记忆 as 记忆存储
+    participant 子智能体
+    participant 引用 as 引用智能体
+
+    用户->>主智能体: 提交查询
+    主智能体->>主智能体: 制定研究计划
+    主智能体->>记忆: 保存计划
+
+    主智能体->>子智能体: 派生多个子智能体
+
+    par 并行执行
+        子智能体->>子智能体: 执行任务 1
+        子智能体->>子智能体: 执行任务 2
+        子智能体->>子智能体: 执行任务 N
+    end
+
+    子智能体->>主智能体: 返回精炼的发现
+
+    alt 信息不足
+        主智能体->>子智能体: 派生额外子智能体
+        子智能体->>主智能体: 返回更多发现
+    end
+
+    主智能体->>引用: 传递发现进行引用标注
+    引用->>用户: 交付最终报告
+```
+
+### 架构优势
+
+相比静态的 RAG 系统，这种动态多步骤方法具有显著优势：
+
+- **自适应搜索**：根据发现持续调整策略
+- **并行调查**：独立探索减少路径依赖
+- **智能压缩**：子智能体过滤和压缩海量信息
+- **关注点分离**：清晰的职责划分便于针对性优化
+
+## 提示工程：引导协作行为
+
+在多智能体系统中，提示工程是引导行为和减轻协调复杂性的主要手段。对主智能体的微小更改可能会不可预测地改变子智能体的行为方式。
+
+### 八项关键原则
+
+```mermaid
+graph LR
+    subgraph 原则
+        P1[像智能体一样思考]
+        P2[教会委派]
+        P3[按复杂度扩展]
+        P4[工具设计]
+        P5[自我改进]
+        P6[先广后深]
+        P7[引导思考]
+        P8[并行调用]
+    end
+
+    P1 --> 成功
+    P2 --> 成功
+    P3 --> 成功
+    P4 --> 成功
+    P5 --> 成功
+    P6 --> 成功
+    P7 --> 成功
+    P8 --> 成功
+
+    成功((可靠系统))
+```
+
+#### 1. 像智能体一样思考
+
+建立准确的心智模型，理解智能体如何解释提示。逐步模拟行为以发现故障模式：
+- 获得足够结果后仍继续搜索
+- 选择错误的工具
+- 遗漏明显的信息
+
+#### 2. 教会编排器如何委派
+
+模糊的任务描述会导致重复工作。有效的委派需要包含：
+
+```
+✅ 具体目标
+✅ 定义输出格式
+✅ 工具和来源指导
+✅ 明确边界
+```
+
+**错误示例**："研究半导体短缺"
+**正确示例**："调查 2025 年供应链对汽车行业的影响，重点关注台积电和三星的产能。输出：带来源的要点摘要。"
+
+#### 3. 按查询复杂度扩展工作量
+
+在编排器的提示中嵌入明确的扩展规则：
+
+| 查询类型 | 智能体数量 | 工具调用次数 |
+|----------|-----------|-------------|
+| 简单事实查询 | 1 | 少量 |
+| 中等研究 | 3-5 | 10-20 |
+| 复杂分析 | 10+ | 50+ |
+
+#### 4. 工具设计和选择至关重要
+
+智能体必须有明确的工具选择启发式规则：
+- 开始前检查所有可用工具
+- 将工具使用与用户意图匹配
+- 选错工具可能导致任务彻底失败
+
+> 如果智能体在网络上搜索只存在于 Slack 中的上下文，那注定会失败。
+
+#### 5. 让智能体自我改进
+
+将模型用作提示工程师：
+- 提供提示 + 故障描述
+- 模型诊断问题并建议改进
+- 结果：**任务完成时间减少 40%**
+
+#### 6. 先广后深
+
+引导智能体模仿专家的研究方法：
+
+```mermaid
+graph LR
+    A[广泛调查] --> B[评估全局]
+    B --> C[识别关键领域]
+    C --> D[深入挖掘细节]
+    D --> E[综合发现]
+```
+
+#### 7. 引导思考过程
+
+使用扩展思考模式作为可控的草稿本：
+- **主智能体**：规划方法、评估工具、定义角色
+- **子智能体**：每次工具调用后评估结果、优化下一步行动
+
+#### 8. 并行工具调用改变速度
+
+实现两种形式的并行化：
+- 主智能体并行派生多个子智能体
+- 每个子智能体并行使用多个工具
+
+**结果**：复杂查询的研究时间减少高达 **90%**。
+
+## 评估：多层次方法
+
+评估非确定性多智能体系统需要灵活性——智能体可以采取不同但同样有效的路径来实现目标。
+
+### 三层策略
+
+```mermaid
+graph TB
+    subgraph 第一层[第一层：小样本测试]
+        T1A[约 20 个查询]
+        T1B[快速反馈]
+        T1C[大效应检测]
+    end
+
+    subgraph 第二层[第二层：LLM 评判]
+        T2A[单评判器 + 评分标准]
+        T2B[可扩展评估]
+        T2C[一致性评分]
+    end
+
+    subgraph 第三层[第三层：人工评估]
+        T3A[边缘案例发现]
+        T3B[微妙偏差检测]
+        T3C[系统性缺陷识别]
+    end
+
+    第一层 --> 第二层 --> 第三层
+```
+
+### LLM 评判标准
+
+| 标准 | 描述 |
+|------|------|
+| **事实准确性** | 声明是否与引用来源匹配？ |
+| **引用准确性** | 引用是否指向正确的来源？ |
+| **完整性** | 是否涵盖查询的所有方面？ |
+| **来源质量** | 是否优先使用权威来源？ |
+| **工具效率** | 工具使用是否合理？ |
+
+### 人工评估发现自动化遗漏的问题
+
+人工测试人员发现早期版本始终优先选择 SEO 优化的内容农场，而不是权威的学术来源——这导致了关键的提示改进。
+
+### 有状态智能体的终态评估
+
+对于在多轮对话中修改持久状态的智能体，应关注智能体是否达到了**正确的最终状态**，而不是验证每个中间步骤。
+
+## 生产可靠性工程
+
+从原型到生产的差距是巨大的。智能体系统中的小错误可能会复合并级联成大的、不可预测的行为变化。
+
+```mermaid
+flowchart TD
+    subgraph 挑战
+        C1[状态性]
+        C2[错误复合]
+        C3[非确定性]
+        C4[部署协调]
+        C5[同步瓶颈]
+    end
+
+    subgraph 解决方案
+        S1[持久执行]
+        S2[检查点与恢复]
+        S3[全链路追踪]
+        S4[彩虹部署]
+        S5[异步架构]
+    end
+
+    C1 --> S1
+    C2 --> S2
+    C3 --> S3
+    C4 --> S4
+    C5 --> S5
+```
+
+### 关键工程挑战
+
+#### 1. 状态性和错误复合
+
+智能体是长时间运行的有状态进程。小故障不能终止整个进程。
+
+**缓解策略**：
+- 设计可从错误点恢复的系统
+- 实现重试逻辑和定期检查点
+- 让智能体在工具失败时自适应
+- 将结构化输出写入外部文件系统
+
+#### 2. 调试非确定性系统
+
+当智能体"未能找到明显信息"时，根本原因并不立即清晰。
+
+**解决方案**：实现全链路生产追踪以诊断故障，并监控高层决策模式。
+
+#### 3. 协调安全部署
+
+智能体系统几乎持续运行——标准部署可能会中断活跃的智能体。
+
+**解决方案**：**彩虹部署**逐步转移流量，同时保持新旧版本同时运行。
+
+#### 4. 同步执行瓶颈
+
+同步执行造成信息瓶颈：
+- 主智能体无法中途引导子智能体
+- 整个系统被单个慢速子智能体阻塞
+
+**未来方向**：异步执行实现更大的并行性（但带来协调挑战）。
+
+### 长对话的上下文管理
+
+生产级智能体参与跨越数百轮的对话。成功的模式包括：
+- 总结已完成的工作阶段
+- 将关键信息存储在外部记忆中
+- 智能压缩上下文同时保持连贯性
+
+## 总结：前进之路
+
+```mermaid
+graph TB
+    subgraph 成功要素[成功关键]
+        K1[精心工程]
+        K2[多层测试]
+        K3[细致提示设计]
+        K4[稳健运维]
+        K5[跨团队协作]
+    end
+
+    K1 --> 影响
+    K2 --> 影响
+    K3 --> 影响
+    K4 --> 影响
+    K5 --> 影响
+
+    影响((实际价值))
+
+    影响 --> R1[发现新商业机会]
+    影响 --> R2[解决复杂问题]
+    影响 --> R3[节省大量工作时间]
+    影响 --> R4[发现研究关联]
+```
+
+构建生产级多智能体系统需要：
+
+1. **精心的工程设计**确保可靠性
+2. **多层次的全面测试**
+3. **细致的提示设计**引导行为
+4. **稳健的运维实践**支持部署
+5. **跨团队协作**——研究、产品和工程团队紧密合作
+
+从原型到生产的道路复杂且充满挑战，但多智能体系统已被证明对复杂、开放式研究任务具有巨大价值。以协调、并行的方式部署智能的能力，正在改变我们处理和解决困难问题的方式。
+
+---
+
+## 参考资料
+
+- [Building effective agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
+- [Multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system) - Anthropic Engineering
+
+---
+
+*本文基于构建和部署生产级多智能体 AI 系统进行复杂研究任务的实践经验整理。*
+8:T24bf,
+# 渐进式披露：Claude Code 如何像智能图书管理员一样加载知识
+
+在使用 Claude 这样的高级 AI 时，最大的挑战并不是能力——而是**上下文管理**。每次与 AI 的交互都发生在"上下文窗口"中，你可以把它想象成一个小型工作台。这个工作台空间有限，所以只在上面放置当前任务所需的工具和文档至关重要。
+
+Anthropic 开发了一个巧妙的解决方案，叫做 **Agent Skills**，它基于一个名为**渐进式披露（Progressive Disclosure）**的设计原则。这个原则就像一个智能图书管理员，在恰当的时机为 Claude 提供恰当的信息——不多不少，刚刚好。
+
+```mermaid
+mindmap
+  root((渐进式披露))
+    问题
+      有限的上下文窗口
+      信息过载
+      效率权衡
+    解决方案
+      分层信息
+      动态加载
+      智能缓存
+    优势
+      无限知识
+      最大效率
+      专注执行
+```
+
+## 什么是 Agent Skills？
+
+**Agent Skill** 是一个有组织的文件夹，包含文本指令、可执行代码和其他资源，AI 智能体可以动态发现和加载这些资源，以更好地完成特定任务。智能体不再是"万金油"，而是可以通过技能成为特定领域的专家。
+
+```mermaid
+flowchart TB
+    subgraph Skill["Agent Skill 结构"]
+        SM[SKILL.md<br/>核心文件]
+        F1[forms.md]
+        F2[reference.md]
+        F3[scripts/]
+    end
+
+    SM --> F1
+    SM --> F2
+    SM --> F3
+
+    Agent((Claude)) -->|"发现"| SM
+```
+
+**Agent Skills 的主要目标：**
+
+| 目标 | 描述 |
+|------|------|
+| **专业化** | 将通用智能体转变为针对特定需求的专业智能体 |
+| **可组合性** | 将专业知识打包成可复用的资源，就像创建详细的入职指南 |
+
+每个技能都围绕一个名为 `SKILL.md` 的核心文件构建。智能体与这个文件及其相关资源的交互方式，是理解渐进式披露的关键。
+
+## 渐进式披露的三个层级
+
+渐进式披露的核心是一个简单但强大的理念：**分层揭示信息**，从简要概述到详细内容，只在必要时才展开。
+
+```mermaid
+flowchart LR
+    subgraph L1["第一层：目录"]
+        Meta[名称 + 描述<br/>YAML 元数据]
+    end
+
+    subgraph L2["第二层：正文"]
+        Body[SKILL.md 主体<br/>核心指令]
+    end
+
+    subgraph L3["第三层：附录"]
+        Ref[附加文件<br/>详细参考]
+    end
+
+    L1 -->|"如果相关"| L2
+    L2 -->|"如果需要"| L3
+
+    style L1 fill:#e3f2fd,stroke:#1976d2
+    style L2 fill:#fff3e0,stroke:#f57c00
+    style L3 fill:#e8f5e9,stroke:#388e3c
+```
+
+### 第一层：目录
+
+SKILL.md 的 YAML 头部只包含 `name` 和 `description` 元数据。这提供了**刚好足够的信息**，让 Claude 知道技能的存在和用途，而无需加载整个文件。
+
+```yaml
+# 示例：PDF 技能元数据
+name: "PDF Skill"
+description: "操作 PDF 文档，填写表单，提取文本"
+```
+
+**关键点：** 这些元数据在启动时预加载，就像图书馆目录一样。
+
+### 第二层：正文
+
+**只有当元数据表明技能与用户任务相关时**，Claude 才会读取 SKILL.md 文件的主体。这一层提供了技能的核心指令和工作流程。
+
+### 第三层及更深：附录
+
+技能目录中的附加链接文件（如 `forms.md`、`reference.md`）包含高度具体或冗长的信息。Claude **仅在需要时**才读取这些文件，用于非常具体的子任务。
+
+## 渐进式披露实战演示
+
+让我们通过一个实际例子来理解——一个设计用来操作 PDF 文档的"PDF 技能"。
+
+```mermaid
+sequenceDiagram
+    participant U as 用户
+    participant C as Claude
+    participant L1 as 第一层<br/>元数据
+    participant L2 as 第二层<br/>SKILL.md
+    participant L3 as 第三层<br/>forms.md
+
+    Note over C,L1: 启动：元数据预加载
+
+    U->>C: "填写这个 PDF 表单"
+
+    rect rgb(227, 242, 253)
+        Note over C,L1: 步骤 1：模式匹配
+        C->>L1: 检查技能描述
+        L1-->>C: PDF 技能看起来相关
+    end
+
+    rect rgb(255, 243, 224)
+        Note over C,L2: 步骤 2：加载核心指令
+        C->>L2: 读取 pdf/SKILL.md
+        L2-->>C: 核心 PDF 指令已加载
+    end
+
+    rect rgb(232, 245, 233)
+        Note over C,L3: 步骤 3：加载具体细节
+        C->>L3: 读取 forms.md
+        L3-->>C: 表单填写详情已加载
+    end
+
+    C->>U: 使用完整上下文执行任务
+```
+
+### 逐步分解
+
+| 步骤 | 操作 | 上下文窗口状态 |
+|------|------|----------------|
+| **启动** | 核心指令 + 第一层元数据加载 | 最小化，准备好处理任何任务 |
+| **技能触发** | 用户要求填写 PDF 表单 | 模式匹配到 PDF 技能 |
+| **第二层加载** | Claude 读取 SKILL.md 主体 | 添加核心指令 |
+| **第三层加载** | Claude 读取 forms.md | 添加专业知识 |
+| **执行** | Claude 执行任务 | 所有必要上下文就位 |
+
+## 为什么这很重要：核心优势
+
+渐进式披露提供了三个重大优势，改变了 AI 智能体的可能性边界。
+
+### 1. 解决上下文窗口限制
+
+```mermaid
+flowchart TB
+    subgraph Traditional["传统方法"]
+        direction TB
+        A1[加载所有内容]
+        A2[上下文溢出]
+        A3[性能下降]
+        A1 --> A2 --> A3
+    end
+
+    subgraph Progressive["渐进式披露"]
+        direction TB
+        B1[仅加载元数据]
+        B2[按需加载]
+        B3[无限潜力]
+        B1 --> B2 --> B3
+    end
+
+    style Traditional fill:#ffebee,stroke:#c62828
+    style Progressive fill:#e8f5e9,stroke:#2e7d32
+```
+
+通过仅在需要时加载信息，智能体不必一次性读取整个技能。这个优雅的解决方案意味着**技能中可以打包的上下文量实际上是无限的**。
+
+> 开发者可以构建一整套组织知识库，智能体可以像人类一样在其中导航——一次查阅一个文档。
+
+### 2. 确保效率和可扩展性
+
+系统通过仅加载当前任务所需的内容，保持交互的精简和快速。
+
+| 指标 | 无渐进式披露 | 有渐进式披露 |
+|------|--------------|--------------|
+| 启动时间 | 慢（加载所有内容） | 快（仅元数据） |
+| 内存使用 | 高（所有技能加载） | 低（按需加载） |
+| 响应速度 | 下降 | 最优 |
+| 技能容量 | 有限 | 无限 |
+
+### 3. 结合自然语言与确定性代码
+
+技能可以包含预编写的脚本，Claude 可以作为工具执行。对于排序大型数据集或从 PDF 中提取表单字段等任务，传统代码比用语言模型生成解决方案更高效、更可靠。
+
+```mermaid
+flowchart LR
+    subgraph Agent["Claude 智能体"]
+        NL[自然语言<br/>推理与策略]
+        Code[确定性代码<br/>精确操作]
+    end
+
+    Task((任务)) --> NL
+    NL -->|"复杂推理"| Decision
+    NL -->|"精确操作"| Code
+    Code --> Result((结果))
+    Decision --> Result
+```
+
+**优势：**
+- 自然语言用于推理和策略
+- 确定性代码用于精确、可重复的操作
+- 一致性和成本节约
+
+## 实践实施建议
+
+在构建考虑渐进式披露的 Agent Skills 时：
+
+### 有效组织你的 SKILL.md
+
+```markdown
+# 良好的结构
+---
+name: "My Skill"
+description: "简短、可搜索的描述"
+---
+
+## 快速入门（第二层）
+适用于大多数用例的核心指令。
+
+## 另请参阅
+- [detailed-guide.md](./detailed-guide.md) - 复杂场景
+- [reference.md](./reference.md) - API 文档
+```
+
+### 保持元数据描述性但简洁
+
+第一层元数据应该是**可搜索且有区分度的**：
+
+| 好的描述 | 为什么有效 |
+|----------|------------|
+| "填写 PDF 表单，提取文本，合并文档" | 具体、可操作的关键词 |
+| "处理 PDF 文件" | 太模糊，可能无法正确触发 |
+
+### 逻辑组织附录
+
+```
+my-skill/
+  SKILL.md           # 核心指令
+  forms.md           # 表单相关细节
+  extraction.md      # 文本提取细节
+  scripts/
+    fill_form.py     # 确定性代码
+    extract_text.py
+```
+
+## 总结
+
+渐进式披露是一种分层加载信息的智能系统——从简要摘要开始，进入核心指令，最后在需要时访问详细附录。
+
+```mermaid
+flowchart TB
+    subgraph Summary["渐进式披露原则"]
+        P1[从元数据目录开始]
+        P2[相关时加载核心指令]
+        P3[仅在需要时访问细节]
+        P4[使用专注的上下文执行]
+
+        P1 --> P2 --> P3 --> P4
+    end
+
+    style Summary fill:#f3e5f5,stroke:#7b1fa2
+```
+
+这种方法使 Claude 能够装备庞大的专业知识库，同时保持其活跃的"工作台"——上下文窗口——干净、有序、专注于手头的任务。
+
+**关键要点：**
+
+| 原则 | 优势 |
+|------|------|
+| 分层加载 | 无限技能容量 |
+| 按需访问 | 最大效率 |
+| 智能缓存 | 快速响应 |
+| 代码集成 | 可靠操作 |
+
+渐进式披露使 Agent Skills 能够同时具备深厚的专业知识和卓越的执行效率——这是 AI 智能体的最佳状态。
+
+---
+
+## 参考资料
+
+- [Claude Code Agent Skills 文档](https://docs.anthropic.com/en/docs/claude-code/skills) - Anthropic Docs
+- [Building effective agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
+
+---
+
+*准备好构建更智能的 AI 智能体了吗？开始思考渐进式披露——这是创建既博学又高效的智能体的关键。*
+9:T38ff,
+import { Card, CardGrid } from '@/components/Card';
+
+<div className="sdk-cards">
+
+<div className="video-container">
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/TqC1qOfiVcQ"
+  title="Claude Agent SDK"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+</div>
+
+---
+
+## Core Architecture
+
+<div className="card-grid cols-3">
+
+<div className="study-card accent-blue">
+<div className="card-icon">🔄</div>
+<h3>Agentic Loop</h3>
+<div className="card-content">
+
+**Gather** → **Act** → **Verify** → Loop
+
+- Gather: Search, read, subagents
+- Act: Bash, tools, code generation
+- Verify: Rules, visual, LLM
+
+</div>
+</div>
+
+<div className="study-card accent-purple">
+<div className="card-icon">🛠️</div>
+<h3>Bash = Super Tool</h3>
+<div className="card-content">
+
+**"First Code Mode"**
+
+```bash
+tail -f log | grep ERROR
+```
+
+General + Composable + Dynamic
+
+</div>
+</div>
+
+<div className="study-card accent-green">
+<div className="card-icon">🔌</div>
+<h3>MCP Protocol</h3>
+<div className="card-content">
+
+**Standardized Integration**
+
+Agent ⟷ MCP ⟷ Slack/GitHub/...
+
+Plug & play, auto-auth
+
+</div>
+</div>
+
+</div>
+
+---
+
+## Key Components
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-orange">
+<div className="card-icon">👥</div>
+<h3>Subagents</h3>
+<div className="card-content">
+
+| Benefit | Description |
+|:--:|:--|
+| ⚡ | Parallel task processing |
+| 📦 | Isolated context, return summary |
+
+> Like junior researchers on a team
+
+</div>
+</div>
+
+<div className="study-card accent-teal">
+<div className="card-icon">📝</div>
+<h3>Skills System</h3>
+<div className="card-content">
+
+| Essence | Folder-based instruction sets |
+|:--:|:--|
+| Mechanism | Progressive context disclosure |
+| Use Cases | Frontend design, doc generation |
+
+</div>
+</div>
+
+</div>
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-pink">
+<div className="card-icon">🗜️</div>
+<h3>Compaction</h3>
+<div className="card-content">
+
+**Problem**: Long conversations exhaust context
+
+**Solution**: Auto-summarize history
+
+Monitor → Trigger → Summarize → Continue
+
+</div>
+</div>
+
+<div className="study-card accent-indigo">
+<div className="card-icon">💻</div>
+<h3>Code Generation</h3>
+<div className="card-content">
+
+**Why is it core?**
+
+✅ Precise & predictable
+✅ Composable & reusable
+✅ Handles complex operations
+
+</div>
+</div>
+
+</div>
+
+---
+
+## Security Model
+
+<div className="study-card wide accent-red">
+<div className="card-icon">🧀</div>
+<h3>Swiss Cheese Defense</h3>
+<div className="card-content defense-layers">
+
+```
+Input → [Model Alignment] → [Tool Permissions] → [Sandboxing] → Safe Output
+           Prevent evil       Parse & control      Limit impact
+```
+
+**Single layers may have holes, but stacked layers ensure security**
+
+</div>
+</div>
+
+<div className="card-grid cols-3">
+
+<div className="study-card small accent-green">
+<h4>Rules Check</h4>
+<p>⭐⭐⭐ Fast | Code/structured data</p>
+</div>
+
+<div className="study-card small accent-yellow">
+<h4>Visual Feedback</h4>
+<p>⭐⭐ Medium | UI/formatting</p>
+</div>
+
+<div className="study-card small accent-orange">
+<h4>LLM as Judge</h4>
+<p>⭐ Slow | Subjective quality</p>
+</div>
+
+</div>
+
+---
+
+## Agent vs Workflow
+
+<div className="comparison-table">
+
+| | 🤖 Agent | 📋 Workflow |
+|:--|:--|:--|
+| **Input** | Ambiguous NL | Well-defined |
+| **Path** | Self-determined | Predefined |
+| **Best For** | Exploratory tasks | Process tasks |
+| **Example** | Claude Code | CI/CD |
+
+</div>
+
+---
+
+## Term Quick Reference
+
+<div className="term-grid">
+
+| Term | One-line Definition |
+|:--|:--|
+| **Agentic Search** | Active file search via grep/tail |
+| **Hooks** | Runtime deterministic verification/injection |
+| **Compact** | Auto-summarize to prevent context exhaustion |
+| **Context Engineering** | Optimize performance via environment structure |
+| **Tools** | Atomic operation definitions |
+
+</div>
+
+---
+
+## Self-Test Q&A
+
+<details>
+<summary>❓ What's the SDK's core design principle?</summary>
+
+Give agents computer access via terminal, using the same tools humans use.
+
+</details>
+
+<details>
+<summary>❓ Why is Bash the most powerful?</summary>
+
+General + Composable + Store results + Dynamic scripts + Reuse existing software
+
+</details>
+
+<details>
+<summary>❓ Two main benefits of subagents?</summary>
+
+1. Parallelization
+2. Isolated context, return only key info
+
+</details>
+
+<details>
+<summary>❓ How to choose verification methods?</summary>
+
+- Code → Rules check (TypeScript/ESLint)
+- UI → Visual feedback (screenshots)
+- Subjective → LLM as judge (use carefully)
+
+</details>
+
+---
+
+<div className="checklist">
+
+## Learning Progress
+
+- [ ] Three-stage agentic loop
+- [ ] Bash core advantages
+- [ ] Subagents & context management
+- [ ] MCP protocol role
+- [ ] Swiss Cheese Defense model
+- [ ] Verification method selection
+
+</div>
+
+</div>
+
+<style>{`
+.video-container {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe {
+  display: block;
+}
+
+.sdk-cards {
+  --card-radius: 12px;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-teal: #14b8a6;
+  --accent-pink: #ec4899;
+  --accent-indigo: #6366f1;
+  --accent-red: #ef4444;
+  --accent-yellow: #eab308;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid.cols-2,
+  .card-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.study-card {
+  background: var(--card-bg, #f8fafc);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  border-left: 4px solid var(--accent, #3b82f6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.study-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.study-card.wide {
+  grid-column: 1 / -1;
+}
+
+.study-card.small {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.study-card.small h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.study-card.small p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.study-card.accent-blue { --accent: var(--accent-blue); }
+.study-card.accent-purple { --accent: var(--accent-purple); }
+.study-card.accent-green { --accent: var(--accent-green); }
+.study-card.accent-orange { --accent: var(--accent-orange); }
+.study-card.accent-teal { --accent: var(--accent-teal); }
+.study-card.accent-pink { --accent: var(--accent-pink); }
+.study-card.accent-indigo { --accent: var(--accent-indigo); }
+.study-card.accent-red { --accent: var(--accent-red); }
+.study-card.accent-yellow { --accent: var(--accent-yellow); }
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.study-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--accent);
+}
+
+.card-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.card-content table {
+  width: 100%;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.card-content pre {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.card-content blockquote {
+  margin: 0.5rem 0;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.defense-layers pre {
+  text-align: center;
+  background: transparent;
+  font-size: 0.85rem;
+}
+
+.comparison-table {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+}
+
+.term-grid {
+  margin: 1rem 0;
+}
+
+.term-grid table {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+details summary {
+  font-weight: 500;
+  user-select: none;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+.checklist {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  margin-top: 2rem;
+}
+
+.checklist h2 {
+  margin-top: 0;
+  color: #059669;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #d1fae5;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .sdk-cards {
+    --accent-blue: #93c5fd;
+    --accent-purple: #c4b5fd;
+    --accent-green: #6ee7b7;
+    --accent-orange: #fcd34d;
+    --accent-teal: #5eead4;
+    --accent-pink: #f9a8d4;
+    --accent-indigo: #a5b4fc;
+    --accent-red: #fca5a5;
+    --accent-yellow: #fde047;
+  }
+
+  .study-card {
+    --card-bg: #1e293b !important;
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+
+  .study-card * {
+    color: inherit;
+  }
+
+  .study-card h3,
+  .study-card h4 {
+    color: var(--accent) !important;
+  }
+
+  .study-card.small p {
+    color: #e2e8f0 !important;
+  }
+
+  .card-content {
+    color: #f1f5f9 !important;
+  }
+
+  .card-content p,
+  .card-content li,
+  .card-content span {
+    color: #f1f5f9 !important;
+  }
+
+  .card-content strong {
+    color: #ffffff !important;
+  }
+
+  .card-content table {
+    border: 1px solid #475569;
+  }
+
+  .card-content th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .card-content td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .card-content pre {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #475569;
+  }
+
+  .card-content code {
+    background: #334155 !important;
+    color: #e2e8f0 !important;
+  }
+
+  .card-content blockquote {
+    background: #334155 !important;
+    border-left: 3px solid var(--accent);
+    color: #e2e8f0 !important;
+  }
+
+  .defense-layers pre {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+    border: none !important;
+  }
+
+  .comparison-table table {
+    border: 1px solid #475569;
+  }
+
+  .comparison-table th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .comparison-table td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .term-grid table {
+    border: 1px solid #475569;
+  }
+
+  .term-grid th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .term-grid td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  details {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  details summary {
+    color: #ffffff !important;
+  }
+
+  details p,
+  details li,
+  details ol {
+    color: #e2e8f0 !important;
+  }
+
+  .checklist {
+    background: #1e293b !important;
+    border: 2px solid #10b981 !important;
+  }
+
+  .checklist h2 {
+    color: #6ee7b7 !important;
+  }
+
+  .checklist li {
+    color: #f1f5f9 !important;
+    border-bottom-color: #334155 !important;
+  }
+
+  .video-container {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  hr {
+    border-color: #475569 !important;
+  }
+}
+
+/* Class-based dark mode */
+:global(.dark) .sdk-cards {
+  --accent-blue: #93c5fd;
+  --accent-purple: #c4b5fd;
+  --accent-green: #6ee7b7;
+  --accent-orange: #fcd34d;
+  --accent-teal: #5eead4;
+  --accent-pink: #f9a8d4;
+  --accent-indigo: #a5b4fc;
+  --accent-red: #fca5a5;
+  --accent-yellow: #fde047;
+}
+
+:global(.dark) .study-card {
+  --card-bg: #1e293b !important;
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .study-card * {
+  color: inherit;
+}
+
+:global(.dark) .study-card h3,
+:global(.dark) .study-card h4 {
+  color: var(--accent) !important;
+}
+
+:global(.dark) .study-card.small p {
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .card-content {
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .card-content p,
+:global(.dark) .card-content li,
+:global(.dark) .card-content span {
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .card-content strong {
+  color: #ffffff !important;
+}
+
+:global(.dark) .card-content table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .card-content th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .card-content td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .card-content pre {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #475569;
+}
+
+:global(.dark) .card-content code {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .card-content blockquote {
+  background: #334155 !important;
+  border-left: 3px solid var(--accent);
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .defense-layers pre {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+}
+
+:global(.dark) .comparison-table table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .comparison-table th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .comparison-table td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .term-grid table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .term-grid th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .term-grid td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) details {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) details summary {
+  color: #ffffff !important;
+}
+
+:global(.dark) details p,
+:global(.dark) details li,
+:global(.dark) details ol {
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .checklist {
+  background: #1e293b !important;
+  border: 2px solid #10b981 !important;
+}
+
+:global(.dark) .checklist h2 {
+  color: #6ee7b7 !important;
+}
+
+:global(.dark) .checklist li {
+  color: #f1f5f9 !important;
+  border-bottom-color: #334155 !important;
+}
+
+:global(.dark) .video-container {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+:global(.dark) hr {
+  border-color: #475569 !important;
+}
+`}</style>
+a:T329f,
+# A Beginner's Guide to the Claude Agent SDK: Giving Your AI a Computer
+
+Welcome to the world of AI agents! This guide is designed for students, enthusiasts, and anyone new to AI development who wants to understand how to build powerful assistants with Anthropic's Claude Agent SDK.
+
+The core idea behind the SDK is simple but powerful: **its purpose is to "give your agents a computer."** This means allowing an AI like Claude to interact with files, run commands, and use digital tools, much like a person does when working on a task.
+
+```mermaid
+mindmap
+  root((Claude Agent SDK))
+    Core Concept
+      Give AI a Computer
+      File Interaction
+      Command Execution
+      Tool Usage
+    Three Stages
+      Gather Context
+      Take Action
+      Verify Work
+    Capabilities
+      Agentic Search
+      Code Generation
+      MCP Integrations
+      Self-Correction
+```
+
+## The Agent's Workflow: A Three-Step Loop
+
+At the heart of any effective AI agent is a fundamental feedback process called the **"agent loop."** This is a continuous, three-step cycle the agent follows to understand a problem, execute a solution, and check its own performance.
+
+```mermaid
+graph LR
+    A[1. Gather Context] --> B[2. Take Action]
+    B --> C[3. Verify Work]
+    C -->|Loop Back| A
+
+    style A fill:#4fc3f7,stroke:#0288d1,color:#000
+    style B fill:#ffb74d,stroke:#f57c00,color:#000
+    style C fill:#81c784,stroke:#388e3c,color:#000
+```
+
+| Stage | Purpose | Key Question |
+|-------|---------|--------------|
+| **Gather Context** | Research & Understanding | What do I need to know? |
+| **Take Action** | Execution & Implementation | How do I accomplish this? |
+| **Verify Work** | Validation & Correction | Did I succeed? |
+
+Throughout this guide, we'll use the example of building a smart **"email agent"** to illustrate how these concepts work in practice.
+
+## Step 1: Gathering Context - What the Agent Needs to Know
+
+Before an agent can act, it must first understand the situation by gathering all the relevant information. This is the research phase of its work.
+
+```mermaid
+flowchart TB
+    subgraph Context["Gathering Context"]
+        AS[Agentic Search]
+        SS[Semantic Search]
+        SA[Subagents]
+        CP[Compaction]
+    end
+
+    AS --> |"Precise text matching"| Info[(Information)]
+    SS --> |"Concept matching"| Info
+    SA --> |"Parallel research"| Info
+    CP --> |"Summary management"| Info
+
+    Info --> Agent((Agent))
+```
+
+### Agentic Search & The File System: The Digital Librarian
+
+The file system—all the folders and files on a computer—acts as the agent's library of potential information. With **Agentic Search**, the agent acts like a digital librarian. Instead of just knowing about the books, it can physically go to the shelves, pull a book (a file), and use tools like the `grep` command to find specific lines of text inside.
+
+> For example, our email agent could search a folder named `Conversations` to find past discussions and retrieve important context before drafting a reply.
+
+### Semantic Search: Finding Ideas, Not Just Words
+
+**Semantic Search** is a different approach where the agent searches for concepts and meanings, not just exact text matches. This is like a librarian using a sophisticated digital catalog that understands topics and themes, allowing it to find relevant books even if they don't contain the user's exact search words.
+
+### Comparing Search Methods
+
+| Feature | Agentic Search | Semantic Search |
+|---------|---------------|-----------------|
+| **Speed** | Slower | Usually Faster |
+| **Accuracy** | More Accurate & Transparent | Less Accurate, Less Transparent |
+| **Maintenance** | Simpler to implement | More difficult to maintain |
+| **Best Use Case** | Default for precise retrieval | When speed or conceptual matches matter more |
+
+> **Key Recommendation**: Start with agentic search, and only add semantic search if you need faster results or more variations.
+
+### Subagents: Delegating the Research
+
+You can think of a **subagent** as a junior researcher on a team. A lead researcher (the main agent) can delegate specific research tasks to multiple junior researchers (subagents), who then report back with only their key findings.
+
+```mermaid
+flowchart TB
+    Main[Main Agent<br/>Lead Researcher]
+
+    Main -->|Delegate| Sub1[Subagent 1<br/>Search emails]
+    Main -->|Delegate| Sub2[Subagent 2<br/>Search calendar]
+    Main -->|Delegate| Sub3[Subagent 3<br/>Search documents]
+
+    Sub1 -->|Key findings| Main
+    Sub2 -->|Key findings| Main
+    Sub3 -->|Key findings| Main
+```
+
+**Two Major Benefits:**
+
+1. **Parallelization**: Multiple subagents work on different tasks simultaneously, dramatically speeding up research
+2. **Context Management**: Each subagent operates in isolation, sending only relevant summaries back to the main agent
+
+### Compaction: Keeping the Conversation Focused
+
+The `compact` feature is an automatic tool for managing long-running conversations. Think of it as a helpful meeting assistant that automatically summarizes the conversation as it goes on, ensuring the agent always remembers the main points without exceeding its context limit.
+
+## Step 2: Taking Action - How the Agent Gets Things Done
+
+This stage is where the agent uses its various capabilities to execute tasks and work towards completing its goal.
+
+```mermaid
+flowchart LR
+    subgraph Actions["Taking Action"]
+        T[Tools]
+        B[Bash & Scripts]
+        C[Code Generation]
+        M[MCPs]
+    end
+
+    Agent((Agent)) --> T
+    Agent --> B
+    Agent --> C
+    Agent --> M
+
+    T -->|"Primary skills"| Result
+    B -->|"Command line"| Result
+    C -->|"Custom solutions"| Result
+    M -->|"External services"| Result
+
+    Result((Results))
+```
+
+### Tools: The Agent's Primary Skills
+
+**"Tools"** are the main, pre-defined actions an agent is designed to perform. These are the skills it will consider first when deciding how to approach a task.
+
+```typescript
+// Example: Email Agent's Primary Tools
+const emailAgentTools = {
+  fetchInbox: () => { /* Retrieve inbox messages */ },
+  searchEmails: (query: string) => { /* Search email history */ },
+  sendEmail: (to: string, subject: string, body: string) => { /* Send email */ },
+  createDraft: (to: string, subject: string, body: string) => { /* Save draft */ }
+};
+```
+
+### Bash & Scripts: The Universal Toolkit
+
+The ability to use **Bash** gives the agent access to a computer's command line, which acts as a flexible, universal toolkit for a huge variety of tasks.
+
+```bash
+# Example: Agent processing an email attachment
+# 1. Download the PDF
+curl -o attachment.pdf "https://example.com/file.pdf"
+
+# 2. Convert to plain text
+pdftotext attachment.pdf attachment.txt
+
+# 3. Search for specific information
+grep -i "contract terms" attachment.txt
+```
+
+### Code Generation: A Creative Superpower
+
+The Claude Agent SDK excels at generating code. This isn't just a feature; it's a **core design principle**.
+
+> **Why Code Generation Matters**: "Code is precise, composable, and infinitely reusable, making it an ideal output for agents that need to perform complex operations reliably."
+
+When you ask Claude.AI to create complex files, it relies entirely on code generation—writing Python scripts in the background to build perfectly formatted Excel spreadsheets and PowerPoint presentations.
+
+### MCPs (Model Context Protocol): Plug-and-Play Connections
+
+Think of **MCPs** as a universal travel adapter for your agent. This protocol allows your agent to easily connect to many different external services without you needing to write custom integration code.
+
+```mermaid
+flowchart TB
+    Agent((Agent))
+
+    subgraph MCP["MCP Protocol"]
+        Slack[Slack]
+        Drive[Google Drive]
+        Asana[Asana]
+        GitHub[GitHub]
+        More[...]
+    end
+
+    Agent <-->|"Standardized Protocol"| MCP
+
+    Slack -->|search_slack_messages| Agent
+    Drive -->|get_drive_files| Agent
+    Asana -->|get_asana_tasks| Agent
+    GitHub -->|create_pull_request| Agent
+```
+
+**Benefits:**
+- Focus on agent behavior, not integration code
+- Simply call tools like `search_slack_messages` or `get_asana_tasks`
+- MCP handles all the complex integration work automatically
+
+## Step 3: Verifying Work - How the Agent Self-Corrects
+
+Reliable agents don't just act; they evaluate their own output to catch mistakes, make corrections, and improve over time.
+
+```mermaid
+flowchart TB
+    Output[Agent Output]
+
+    Output --> Rules[Rule-Based Checking]
+    Output --> Visual[Visual Feedback]
+    Output --> LLM[LLM as Judge]
+
+    Rules -->|"Linting, Type Checking"| Verified
+    Visual -->|"Screenshot Analysis"| Verified
+    LLM -->|"Subjective Evaluation"| Verified
+
+    Verified{Passed?}
+    Verified -->|Yes| Done[Complete]
+    Verified -->|No| Retry[Retry with Corrections]
+    Retry --> Output
+```
+
+### Three Ways to Check the Work
+
+#### 1. Defining Rules (Recommended)
+
+This is like using a grammar or spell checker. You provide clear, concrete rules for what a "good" output looks like.
+
+```typescript
+// Example: TypeScript + Linting for robust verification
+// Instead of just generating JavaScript...
+
+// Generate TypeScript with strict type checking
+const generatedCode = agent.generateTypeScript(task);
+
+// Run linting to catch errors automatically
+const lintResults = eslint.verify(generatedCode);
+
+// Multiple layers of feedback!
+if (lintResults.errors.length > 0) {
+  agent.retry(lintResults.errors);
+}
+```
+
+> **Pro Tip**: Generate TypeScript and lint it. This provides multiple additional layers of feedback compared to plain JavaScript.
+
+#### 2. Visual Feedback
+
+If the agent's task is visual, like formatting an HTML email, it can be shown a screenshot of the final result. The agent can then analyze the image to see if the layout, styling, and content look right.
+
+#### 3. LLM as a Judge (Use with Caution)
+
+This is like getting a second opinion from a colleague, where another AI model "judges" the output based on subjective criteria like tone or style.
+
+> **Warning**: This is "generally not a very robust method, and can have heavy latency tradeoffs." Consider it an advanced technique for situations where even a small performance boost is worth the cost.
+
+### Verification Methods Comparison
+
+| Method | Reliability | Speed | Best For |
+|--------|-------------|-------|----------|
+| **Rule-Based** | High | Fast | Code, structured data |
+| **Visual Feedback** | Medium | Medium | UI, formatting |
+| **LLM as Judge** | Low | Slow | Subjective quality |
+
+## Putting It All Together: The Email Agent
+
+Let's see how all three stages work together in our email agent example:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Agent as Email Agent
+    participant Search as Search Tools
+    participant Action as Action Tools
+    participant Verify as Verification
+
+    User->>Agent: "Reply to John's email about the project"
+
+    rect rgb(225, 245, 254)
+        Note over Agent,Search: Stage 1: Gather Context
+        Agent->>Search: Search emails from John
+        Search-->>Agent: Found 5 relevant emails
+        Agent->>Search: Search project documents
+        Search-->>Agent: Found project timeline
+    end
+
+    rect rgb(255, 243, 224)
+        Note over Agent,Action: Stage 2: Take Action
+        Agent->>Action: Draft reply with context
+        Action-->>Agent: Email draft created
+    end
+
+    rect rgb(232, 245, 233)
+        Note over Agent,Verify: Stage 3: Verify Work
+        Agent->>Verify: Check tone and completeness
+        Verify-->>Agent: Approved
+    end
+
+    Agent->>User: "Here's your draft reply"
+```
+
+## Getting Started on Your Journey
+
+The Claude Agent SDK makes it easier than ever to build powerful, autonomous agents. By giving your AI access to a computer and a reliable three-step workflow—**gather context, take action, and verify work**—you can create assistants capable of tackling a wide range of digital tasks.
+
+### Quick Start Checklist
+
+```
+1. [ ] Install the Claude Agent SDK
+2. [ ] Define your agent's primary tools
+3. [ ] Set up context gathering methods
+4. [ ] Configure verification rules
+5. [ ] Test with simple tasks first
+6. [ ] Iterate and improve
+```
+
+### Key Takeaways
+
+| Principle | Implementation |
+|-----------|---------------|
+| Start simple | Begin with agentic search before semantic search |
+| Use subagents | Parallelize research for complex tasks |
+| Generate code | Leverage code for precise, reusable operations |
+| Verify everything | Rule-based checks > LLM judges |
+| Iterate | The agent loop is continuous improvement |
+
+---
+
+## References
+
+- [Claude Agent SDK Documentation](https://docs.anthropic.com/en/docs/agents-and-tools/claude-agent-sdk) - Anthropic Docs
+- [Building effective agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
+
+---
+
+*Ready to build your first AI agent? The Claude Agent SDK is your starting point for creating intelligent assistants that can truly interact with the digital world.*
+b:T2eda,
+# 2026 Complete Guide to Opening a Hong Kong Bank Account
+
+As globalization deepens and cross-border business expands, having a Hong Kong bank account has become increasingly valuable. Whether you're looking to invest in Hong Kong or US stocks, receive overseas income, or diversify your assets, this guide will help you navigate the account opening process successfully.
+
+![Hong Kong Financial Center](https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=800&auto=format&fit=crop&q=60)
+
+## Why Do You Need a Hong Kong Bank Account?
+
+Hong Kong, as an international financial center, offers unique advantages:
+
+```mermaid
+mindmap
+  root((HK Bank Account Benefits))
+    Investment Access
+      HK Stocks Direct
+      US Stock Trading
+      Fund Subscriptions
+    Money Flow
+      Easy Cross-border Transfers
+      Free Currency Exchange
+      Multi-currency Accounts
+    Asset Allocation
+      USD Assets
+      Offshore Savings
+      Insurance Purchase
+    Business Use
+      Trade Payments
+      Corporate Accounts
+      PayPal Withdrawals
+```
+
+### Main Use Cases
+
+| Scenario | Specific Needs | Recommended Bank |
+|----------|---------------|------------------|
+| Stock Investment | Broker deposits/withdrawals | HSBC, BOCHK |
+| Overseas Income | Freelancing/Remote Work | ZA Bank |
+| E-commerce | PayPal, Trade Payments | BOCHK, Standard Chartered |
+| Asset Allocation | USD Savings, Insurance | HSBC Premier, Citibank |
+
+## Comparison of Major Hong Kong Banks
+
+```mermaid
+graph TB
+    subgraph Traditional Banks
+        A[HSBC]
+        B[Bank of China HK]
+        C[Hang Seng Bank]
+        D[Standard Chartered]
+    end
+
+    subgraph Virtual Banks
+        E[ZA Bank]
+        F[Airstar Bank]
+        G[WeLab Bank]
+        H[Mox Bank]
+    end
+
+    subgraph Decision Guide
+        I{Your Needs?}
+        I -->|Large funds/Full services| A
+        I -->|Mainland connection| B
+        I -->|Quick setup/Small amount| E
+        I -->|Investment products| C
+    end
+```
+
+### Detailed Bank Comparison
+
+#### Traditional Banks
+
+| Bank | Minimum Deposit | Monthly Fee | Pros | Cons |
+|------|----------------|-------------|------|------|
+| **HSBC** | HKD 10,000 | Waived with conditions | High international recognition | Higher threshold |
+| **Bank of China HK** | Lower | Low | Good mainland connection | Slower int'l transfers |
+| **Hang Seng Bank** | Medium | Waived with conditions | Rich investment products | Harder for non-residents |
+| **Standard Chartered** | Medium | Waived with conditions | Good international network | Fewer branches |
+
+#### Virtual Banks (Recommended for Beginners)
+
+| Bank | Application | Features | Best For |
+|------|-------------|----------|----------|
+| **ZA Bank** ⭐ | 100% Online | Fastest approval, user-friendly, zero fees | First-time applicants |
+| **Airstar Bank** | 100% Online | Xiaomi ecosystem, good rates | Xiaomi users |
+| **Mox Bank** | 100% Online | Standard Chartered backed | Conservative users |
+
+> 💡 **Top Pick for Beginners**: If this is your first Hong Kong bank account, we highly recommend **ZA Bank**. Fully online application, no need to visit Hong Kong, no minimum deposit, zero account fees, and you can get approved as fast as the same day.
+
+## Choosing Your Application Method
+
+```mermaid
+flowchart TD
+    A[Choose Application Method] --> B{Can you visit HK?}
+    B -->|Yes| C[In-person Application]
+    B -->|No| D{Fund requirements?}
+
+    C --> C1[Traditional Bank Branch]
+    C --> C2[Virtual Bank + In-person Verification]
+
+    D -->|Large amount/Full services| E[Witness Account Opening]
+    D -->|Small amount/Temporary| F[Online Virtual Bank]
+
+    C1 --> G[✅ Full-feature Account]
+    E --> H[✅ Remote Traditional Bank Access]
+    F --> I[✅ Quick Basic Account]
+
+    style G fill:#90EE90
+    style H fill:#90EE90
+    style I fill:#90EE90
+```
+
+### Three Application Methods Explained
+
+#### Method 1: In-person in Hong Kong (Recommended)
+
+**Advantages**: Highest success rate, full features, best service
+
+**Process**:
+1. Book appointment in advance (Very important!)
+2. Visit with required documents
+3. Bank interview (About 30-60 minutes)
+4. Receive card on-site or by mail
+
+#### Method 2: Witness Account Opening (Mainland China)
+
+**Available Banks**: HSBC, BOCHK, CMB Wing Lung, etc.
+
+**Process**:
+1. Book at designated mainland branches
+2. Complete video/in-person verification
+3. Hong Kong review process
+4. Card and security device mailed
+
+#### Method 3: Online Application (Virtual Banks)
+
+**Available Banks**: ZA Bank, Airstar Bank, Mox, etc.
+
+**Process**:
+1. Download app and register
+2. Upload ID photos
+3. Face verification
+4. Wait for approval (Usually 1-3 days)
+
+## Required Documents Checklist
+
+```mermaid
+graph LR
+    subgraph Essential Documents
+        A[ID Card]
+        B[Travel Permit/Passport]
+        C[Entry Slip]
+        D[Address Proof]
+    end
+
+    subgraph Supporting Documents
+        E[Employment Letter]
+        F[Income Proof]
+        G[Bank Statements]
+        H[Investment Records]
+    end
+
+    subgraph Boost Success Rate
+        I[Mainland Bank Card]
+        J[Credit Card Statement]
+        K[Social Security Proof]
+        L[Property Certificate]
+    end
+```
+
+### Document Details
+
+#### Essential Documents ✅
+
+| Document | Requirement | Notes |
+|----------|-------------|-------|
+| **ID Card** | Original | Must be valid |
+| **Travel Permit** | Original + valid visa | Or valid passport |
+| **Entry Slip** | Same-day entry proof | Required by some banks |
+| **Address Proof** | Within 3 months | Utility bill/Bank statement |
+
+#### Acceptable Address Proof
+
+- 📧 Credit card statement
+- 💡 Utility bills (water/electricity)
+- 📱 Phone bill
+- 🏠 Residence certificate
+- 🏦 Bank deposit certificate
+
+> **Tip**: Address proof must include your name and detailed address, dated within 3 months.
+
+## Step-by-Step Application Process
+
+Here's a typical **in-person traditional bank** application:
+
+```mermaid
+sequenceDiagram
+    participant You
+    participant Booking System
+    participant Bank Counter
+    participant Bank Backend
+
+    You->>Booking System: 1. Book online/via App
+    Booking System-->>You: Confirm appointment time
+
+    You->>Bank Counter: 2. Visit with documents
+    Bank Counter->>You: 3. Document verification
+    Bank Counter->>You: 4. Interview (account purpose, etc.)
+
+    You->>Bank Counter: 5. Fill out forms
+    You->>Bank Counter: 6. Sign confirmation
+
+    Bank Counter->>Bank Backend: 7. Submit for review
+    Bank Backend-->>Bank Counter: 8. Approval
+
+    Bank Counter->>You: 9. Issue bank card
+    Bank Counter->>You: 10. Set up PIN/Online banking
+```
+
+### Step 1: Make an Appointment
+
+**Why book in advance?**
+- Walk-ins face long wait times
+- Some banks don't accept walk-ins
+- Can request English/Mandarin service
+
+**Booking Channels**:
+- Bank official website
+- Bank mobile app
+- Customer service hotline
+
+### Step 2: Prepare for Interview
+
+Common interview questions:
+
+```mermaid
+graph TD
+    A[Common Interview Questions] --> B[Account Purpose]
+    A --> C[Source of Funds]
+    A --> D[Employment Info]
+    A --> E[Expected Usage]
+
+    B --> B1[Investment/Savings/Payments]
+    C --> C1[Salary/Business/Investment Returns]
+    D --> D1[Company/Position/Income]
+    E --> E1[Monthly Balance/Transfer Frequency]
+```
+
+**Answer Tips**:
+- 🎯 Clear purpose: Stock investment, savings, business transactions
+- 💰 Legitimate source: Salary, investment returns, business income
+- 📊 Match your profile: Income should align with occupation
+
+### Step 3: Activation
+
+After successful opening:
+1. Download bank app
+2. Activate online banking
+3. Set transfer limits
+4. Link phone number (HK number recommended)
+
+## Tips for Higher Success Rate
+
+```mermaid
+pie title Success Factors
+    "Document Completeness" : 30
+    "Proof of Funds" : 25
+    "Reasonable Purpose" : 20
+    "Interview Performance" : 15
+    "Bank Selection" : 10
+```
+
+### High Success Strategies
+
+#### 1. Choose the Right Bank
+
+- **First account**: Consider BOCHK or virtual banks
+- **Significant assets**: Try HSBC, Standard Chartered
+- **Urgent need**: Prioritize virtual banks
+
+#### 2. Thorough Document Preparation
+
+```
+✅ All essential documents ready
+✅ Address proof within validity
+✅ Prepare bilingual materials
+✅ Bring extra supporting documents
+```
+
+#### 3. Interview Performance
+
+- Dress professionally
+- Answer clearly without hesitation
+- Proactively explain account purpose
+- Avoid sensitive terms
+
+## Frequently Asked Questions
+
+### Q1: No Hong Kong phone number?
+
+**Solutions**:
+1. Buy HK SIM card online before trip
+2. Use mainland number (some banks accept)
+3. Purchase local SIM upon arrival
+
+### Q2: Address proof doesn't meet requirements?
+
+**Alternatives**:
+- Print electronic credit card statement
+- Request bank deposit certificate
+- Use residence certificate template
+
+### Q3: Application rejected?
+
+```mermaid
+flowchart LR
+    A[Rejected] --> B{Analyze Reason}
+    B --> C[Incomplete Documents]
+    B --> D[Unclear Fund Source]
+    B --> E[Vague Purpose]
+
+    C --> F[Complete docs & reapply]
+    D --> G[Prepare income proof]
+    E --> H[Clarify specific use]
+
+    F --> I[Try a different bank]
+    G --> I
+    H --> I
+```
+
+### Q4: How to fund the account?
+
+| Method | Fee | Processing Time | Limit |
+|--------|-----|-----------------|-------|
+| Bank Wire | $15-30 | 1-3 business days | $50K USD/year |
+| Transfer from friend | Free | Instant | Unlimited |
+| Broker Transfer | Varies | 1-2 business days | Unlimited |
+
+## Post-Opening Tips
+
+### Keep Account Active
+
+```mermaid
+timeline
+    title Account Maintenance Timeline
+
+    Monthly : At least one transaction
+           : Login to app/online banking
+
+    Quarterly : Check account status
+             : Update contact info
+
+    Yearly : Confirm account details
+          : Review account fees
+```
+
+### Avoid Account Freezing
+
+- ⚠️ Avoid frequent large transactions
+- ⚠️ Avoid transactions with high-risk regions
+- ⚠️ Maintain account activity
+- ⚠️ Update personal information promptly
+
+## Summary
+
+```mermaid
+graph TB
+    subgraph Three Steps to Success
+        A[1. Choose Bank] --> B[2. Prepare Documents]
+        B --> C[3. Complete Application]
+    end
+
+    A --> A1[Beginners: Virtual Banks]
+    A --> A2[Full needs: Traditional Banks]
+
+    B --> B1[ID + Address Proof]
+    B --> B2[Income/Asset Proof]
+
+    C --> C1[Online/Offline Method]
+    C --> C2[Activate & Use]
+```
+
+Opening a Hong Kong bank account isn't difficult. The keys are:
+1. **Choose wisely**: Select a bank that matches your needs
+2. **Prepare thoroughly**: Better to over-prepare than under-prepare
+3. **Be genuine**: Show honest intentions during the interview
+
+Good luck with your application! Feel free to ask questions in the comments.
+
+---
+
+## 🎁 Exclusive Reader Bonus
+
+If you decide to open an account with **ZA Bank**, here's an exclusive bonus for you:
+
+<div style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '24px', borderRadius: '12px', color: 'white', margin: '20px 0'}}>
+
+### 🏦 ZA Bank Welcome Rewards
+
+**Use our referral code to enjoy rewards worth up to HKD 2,026!**
+
+✨ **Account Opening Rewards**:
+- 💰 Exclusive welcome bonus for new customers
+- 📈 **3% stock cashback** on card spending
+- 🎯 No minimum deposit, zero account maintenance fee
+
+✨ **Why ZA Bank**:
+- ✅ 100% online application, no branch visit needed
+- ✅ 24/7 banking services
+- ✅ User-friendly interface, simple operations
+
+**👉 Referral Code: `P8KX83`**
+
+[Open Account & Claim Rewards →](https://l.za.group/oczrP)
+
+</div>
+
+> ⚠️ Investment involves risks. Subject to terms and conditions. This material may only be distributed or circulated in Hong Kong. [View full terms](https://l.za.group/iAF3x)
+
+---
+
+*Disclaimer: This article is for reference only. Specific requirements are subject to each bank's official policies. Bank policies may change at any time. Please confirm the latest requirements with official customer service before applying.*
+c:T30cd,
+# Architecting Production-Grade Multi-Agent AI Systems
+
+As the capabilities of individual AI models advance, the next frontier lies not just in enhancing single models but in scaling their **collective intelligence**. Multi-agent systems—where multiple Large Language Models work together, autonomously using tools in a coordinated loop—mark a significant departure from linear, one-shot pipelines.
+
+```mermaid
+mindmap
+  root((Multi-Agent AI))
+    Performance
+      90% uplift vs single agent
+      80% variance from token scaling
+      Parallel execution
+    Architecture
+      Orchestrator-Worker pattern
+      Dynamic task delegation
+      Memory persistence
+    Applications
+      Complex research
+      Open-ended discovery
+      Multi-domain analysis
+```
+
+## Why Multi-Agent Systems?
+
+Traditional single-agent systems struggle with the dynamic nature of in-depth research. Discovery isn't linear—it requires flexibility to pivot, explore tangents, and update strategy based on intermediate findings.
+
+### Quantifiable Benefits
+
+| Metric | Result |
+|--------|--------|
+| **Performance Uplift** | 90.2% improvement over single-agent |
+| **Token Scaling Impact** | 80% of performance variance explained |
+| **Task Parallelization** | Significant gains in quality and speed |
+
+Multi-agent systems excel when tasks are:
+- Valuable and complex
+- Heavily parallelizable
+- Require processing beyond a single context window
+- Involve interfacing with numerous tools
+
+## System Architecture: The Orchestrator-Worker Framework
+
+The system employs an **orchestrator-worker pattern** where a central lead agent coordinates the research process while delegating specific tasks to specialized worker agents (subagents) that operate concurrently.
+
+```mermaid
+flowchart TB
+    subgraph Orchestrator
+        LA[LeadResearcher Agent]
+        MEM[(Memory)]
+    end
+
+    subgraph Workers
+        SA1[Subagent 1]
+        SA2[Subagent 2]
+        SA3[Subagent 3]
+        SAN[Subagent N]
+    end
+
+    subgraph Tools
+        WS[Web Search]
+        DB[(Database)]
+        API[External APIs]
+    end
+
+    subgraph Post-Processing
+        CA[CitationAgent]
+    end
+
+    User -->|Query| LA
+    LA -->|Save Plan| MEM
+    LA -->|Spawn| SA1
+    LA -->|Spawn| SA2
+    LA -->|Spawn| SA3
+    LA -->|Spawn| SAN
+
+    SA1 --> WS
+    SA2 --> WS
+    SA3 --> DB
+    SAN --> API
+
+    SA1 -->|Findings| LA
+    SA2 -->|Findings| LA
+    SA3 -->|Findings| LA
+    SAN -->|Findings| LA
+
+    LA -->|Synthesize| CA
+    CA -->|Final Report| User
+```
+
+### Core Components
+
+| Component | Role | Responsibility |
+|-----------|------|----------------|
+| **LeadResearcher** | Orchestrator | Analyzes queries, develops plans, spawns subagents, synthesizes findings |
+| **Memory** | Persistence | Stores research plan outside context window for long-running tasks |
+| **Subagents** | Workers | Execute specific research tasks in parallel with tool access |
+| **CitationAgent** | Post-processor | Reviews report and inserts precise source citations |
+
+### The Research Workflow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Lead as LeadResearcher
+    participant Memory
+    participant Sub as Subagents
+    participant Citation as CitationAgent
+
+    User->>Lead: Submit query
+    Lead->>Lead: Formulate research plan
+    Lead->>Memory: Save plan
+
+    Lead->>Sub: Spawn multiple subagents
+
+    par Parallel Execution
+        Sub->>Sub: Execute task 1
+        Sub->>Sub: Execute task 2
+        Sub->>Sub: Execute task N
+    end
+
+    Sub->>Lead: Return condensed findings
+
+    alt Insufficient Information
+        Lead->>Sub: Spawn additional subagents
+        Sub->>Lead: Return more findings
+    end
+
+    Lead->>Citation: Pass findings for citation
+    Citation->>User: Deliver final report
+```
+
+### Why This Architecture Wins
+
+This dynamic, multi-step approach offers significant advantages over static RAG systems:
+
+- **Adaptive Search**: Continuously adapts strategy based on findings
+- **Parallel Investigation**: Independent explorations reduce path dependency
+- **Intelligent Compression**: Subagents filter and compress vast information spaces
+- **Clear Separation**: Distinct concerns enable focused optimization
+
+## Prompt Engineering: Guiding Collaborative Behavior
+
+In multi-agent systems, prompt engineering is the primary lever for steering behavior and mitigating coordination complexity. Minor changes to a lead agent can unpredictably alter how subagents behave.
+
+### Eight Critical Principles
+
+```mermaid
+graph LR
+    subgraph Principles
+        P1[Think Like Agents]
+        P2[Teach Delegation]
+        P3[Scale Effort]
+        P4[Tool Design]
+        P5[Self-Improvement]
+        P6[Wide to Narrow]
+        P7[Guide Thinking]
+        P8[Parallel Calls]
+    end
+
+    P1 --> Success
+    P2 --> Success
+    P3 --> Success
+    P4 --> Success
+    P5 --> Success
+    P6 --> Success
+    P7 --> Success
+    P8 --> Success
+
+    Success((Reliable System))
+```
+
+#### 1. Think Like Your Agents
+
+Build an accurate mental model of how agents interpret prompts. Simulate behavior step-by-step to reveal failure modes like:
+- Continuing search after sufficient results
+- Selecting incorrect tools
+- Missing obvious information
+
+#### 2. Teach the Orchestrator How to Delegate
+
+Vague task descriptions lead to duplicated work. Effective delegation includes:
+
+```
+✅ Specific objective
+✅ Defined output format
+✅ Tool and source guidance
+✅ Clear boundaries
+```
+
+**Bad**: "Research the semiconductor shortage"
+**Good**: "Investigate 2025 supply chain impacts on automotive sector, focusing on TSMC and Samsung capacity. Output: bullet summary with sources."
+
+#### 3. Scale Effort to Query Complexity
+
+Embed explicit scaling rules in the orchestrator's prompt:
+
+| Query Type | Agents | Tool Calls |
+|------------|--------|------------|
+| Simple fact-finding | 1 | Few |
+| Moderate research | 3-5 | 10-20 |
+| Complex analysis | 10+ | 50+ |
+
+#### 4. Tool Design and Selection Are Critical
+
+Agents must have explicit heuristics for tool selection:
+- Examine all available tools before starting
+- Match tool usage to user intent
+- Wrong tool choice can be fatal to a task
+
+> An agent searching the web for context that only exists in Slack is doomed from the start.
+
+#### 5. Let Agents Improve Themselves
+
+Use models as prompt engineers:
+- Provide prompt + failure description
+- Model diagnoses issues and suggests improvements
+- Result: **40% decrease in task completion time**
+
+#### 6. Start Wide, Then Narrow Down
+
+Guide agents to mirror expert human research:
+
+```mermaid
+graph LR
+    A[Broad Survey] --> B[Evaluate Landscape]
+    B --> C[Identify Key Areas]
+    C --> D[Deep Dive Specifics]
+    D --> E[Synthesize Findings]
+```
+
+#### 7. Guide the Thinking Process
+
+Use extended thinking modes as controllable scratchpads:
+- **Lead agent**: Plan approach, assess tools, define roles
+- **Subagents**: Evaluate results, refine next actions after each tool call
+
+#### 8. Parallel Tool Calling Transforms Speed
+
+Implement two forms of parallelization:
+- Lead agent spawns multiple subagents in parallel
+- Each subagent uses multiple tools in parallel
+
+**Result**: Up to **90% reduction** in research time for complex queries.
+
+## Evaluation: A Multi-Faceted Approach
+
+Evaluating non-deterministic multi-agent systems requires flexibility—agents can take different yet equally valid paths to achieve goals.
+
+### Three-Tiered Strategy
+
+```mermaid
+graph TB
+    subgraph Tier1[Tier 1: Small-Sample Testing]
+        T1A[~20 queries]
+        T1B[Rapid feedback]
+        T1C[Large effect detection]
+    end
+
+    subgraph Tier2[Tier 2: LLM-as-Judge]
+        T2A[Single judge + rubric]
+        T2B[Scalable evaluation]
+        T2C[Consistent scoring]
+    end
+
+    subgraph Tier3[Tier 3: Human Evaluation]
+        T3A[Edge case discovery]
+        T3B[Subtle bias detection]
+        T3C[Systemic flaw identification]
+    end
+
+    Tier1 --> Tier2 --> Tier3
+```
+
+### LLM Judge Evaluation Criteria
+
+| Criterion | Description |
+|-----------|-------------|
+| **Factual Accuracy** | Do claims match cited sources? |
+| **Citation Accuracy** | Do citations point to correct sources? |
+| **Completeness** | Are all query aspects covered? |
+| **Source Quality** | Were authoritative sources prioritized? |
+| **Tool Efficiency** | Were correct tools used reasonably? |
+
+### Human Evaluation Catches What Automation Misses
+
+Human testers discovered that early versions consistently preferred SEO-optimized content farms over authoritative academic sources—leading to critical prompt improvements.
+
+### End-State Evaluation for Stateful Agents
+
+For agents modifying persistent state over many turns, focus on whether the agent achieved the **correct final state** rather than validating every intermediate step.
+
+## Engineering for Production Reliability
+
+The gap between prototype and production is substantial. Minor errors in agentic systems can compound and cascade into large, unpredictable behavioral changes.
+
+```mermaid
+flowchart TD
+    subgraph Challenges
+        C1[Statefulness]
+        C2[Error Compounding]
+        C3[Non-Determinism]
+        C4[Deployment Coordination]
+        C5[Synchronous Bottlenecks]
+    end
+
+    subgraph Solutions
+        S1[Durable Execution]
+        S2[Checkpoint & Resume]
+        S3[Full Production Tracing]
+        S4[Rainbow Deployments]
+        S5[Async Architecture]
+    end
+
+    C1 --> S1
+    C2 --> S2
+    C3 --> S3
+    C4 --> S4
+    C5 --> S5
+```
+
+### Key Engineering Challenges
+
+#### 1. Statefulness and Error Compounding
+
+Agents are long-running, stateful processes. A minor failure cannot terminate the entire process.
+
+**Mitigation Strategies**:
+- Design systems that resume from error points
+- Implement retry logic and regular checkpoints
+- Let agents adapt when tools fail
+- Write structured outputs to external filesystem
+
+#### 2. Debugging Non-Deterministic Systems
+
+When an agent "fails to find obvious information," the root cause isn't immediately clear.
+
+**Solution**: Implement full production tracing to diagnose failures and monitor high-level decision patterns.
+
+#### 3. Coordinating Safe Deployments
+
+An agentic system runs almost continuously—standard deployments can break active agents.
+
+**Solution**: **Rainbow deployments** gradually shift traffic while keeping old and new versions running simultaneously.
+
+#### 4. Synchronous Execution Bottlenecks
+
+Synchronous execution creates information bottlenecks:
+- Lead agent cannot steer subagents mid-task
+- Entire system blocked by single slow subagent
+
+**Future**: Asynchronous execution enables greater parallelism (with coordination challenges).
+
+### Context Management for Extended Conversations
+
+Production agents engage in conversations spanning hundreds of turns. Successful patterns include:
+- Summarize completed work phases
+- Store essential information in external memory
+- Intelligently compress context while preserving coherence
+
+## Summary: The Path Forward
+
+```mermaid
+graph TB
+    subgraph Success[Keys to Success]
+        K1[Careful Engineering]
+        K2[Multi-faceted Testing]
+        K3[Detail-oriented Prompting]
+        K4[Robust Operations]
+        K5[Cross-team Collaboration]
+    end
+
+    K1 --> Impact
+    K2 --> Impact
+    K3 --> Impact
+    K4 --> Impact
+    K5 --> Impact
+
+    Impact((Real-World Impact))
+
+    Impact --> R1[New business opportunities]
+    Impact --> R2[Complex problem solving]
+    Impact --> R3[Days of work saved]
+    Impact --> R4[Research connections discovered]
+```
+
+Building production-grade multi-agent systems requires:
+
+1. **Careful engineering** for reliability
+2. **Comprehensive testing** across multiple tiers
+3. **Detail-oriented prompt design** to guide behavior
+4. **Robust operational practices** for deployment
+5. **Cross-team collaboration** between research, product, and engineering
+
+The journey from prototype to production is complex, but multi-agent systems have proven immensely valuable for complex, open-ended research tasks. The ability to deploy intelligence in a coordinated, parallel fashion is transforming how we approach and solve difficult problems.
+
+---
+
+## References
+
+- [Building effective agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
+- [Multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system) - Anthropic Engineering
+
+---
+
+*This article is based on research into building and deploying production multi-agent AI systems for complex research tasks.*
+d:T2864,
+# Progressive Disclosure: How Claude Code Loads Knowledge Like a Smart Librarian
+
+When working with advanced AI like Claude, one of the biggest challenges isn't capability—it's **context management**. Every interaction with an AI happens within a "context window," which you can think of as a small workbench. This workbench has limited space, so placing only the necessary tools and documents on it for the current job is crucial.
+
+Anthropic developed a clever solution called **Agent Skills**, built on a design principle named **Progressive Disclosure**. This principle acts like a smart librarian, giving Claude exactly the information it needs, precisely when it needs it—never too much, never too little.
+
+```mermaid
+mindmap
+  root((Progressive Disclosure))
+    Problem
+      Limited Context Window
+      Information Overload
+      Efficiency Trade-offs
+    Solution
+      Layered Information
+      Dynamic Loading
+      Smart Caching
+    Benefits
+      Unlimited Knowledge
+      Maximum Efficiency
+      Focused Execution
+```
+
+## What Are Agent Skills?
+
+An **Agent Skill** is an organized folder of textual instructions, executable code, and other resources that an AI agent can discover and load dynamically to perform better at specific tasks. Instead of being a jack-of-all-trades, an agent can use skills to become an expert in a particular area.
+
+```mermaid
+flowchart TB
+    subgraph Skill["Agent Skill Structure"]
+        SM[SKILL.md<br/>Central File]
+        F1[forms.md]
+        F2[reference.md]
+        F3[scripts/]
+    end
+
+    SM --> F1
+    SM --> F2
+    SM --> F3
+
+    Agent((Claude)) -->|"Discovers"| SM
+```
+
+**Primary Goals of Agent Skills:**
+
+| Goal | Description |
+|------|-------------|
+| **Specialization** | Transform a general-purpose agent into a specialized one tailored to specific needs |
+| **Composability** | Package expertise into reusable resources, like creating a detailed onboarding guide |
+
+Every skill is built around a central file called `SKILL.md`. The way an agent interacts with this file and its related resources is the key to understanding Progressive Disclosure.
+
+## The Three Levels of Progressive Disclosure
+
+At its heart, Progressive Disclosure is a simple but powerful idea: **reveal information in layers**, from a brief overview to comprehensive detail, only as it becomes necessary.
+
+```mermaid
+flowchart LR
+    subgraph L1["Level 1: Table of Contents"]
+        Meta[Name + Description<br/>YAML Metadata]
+    end
+
+    subgraph L2["Level 2: Main Chapter"]
+        Body[SKILL.md Body<br/>Core Instructions]
+    end
+
+    subgraph L3["Level 3: Appendices"]
+        Ref[Additional Files<br/>Detailed References]
+    end
+
+    L1 -->|"If relevant"| L2
+    L2 -->|"If needed"| L3
+
+    style L1 fill:#e3f2fd,stroke:#1976d2
+    style L2 fill:#fff3e0,stroke:#f57c00
+    style L3 fill:#e8f5e9,stroke:#388e3c
+```
+
+### Level 1: The Table of Contents
+
+The SKILL.md's YAML frontmatter contains just the `name` and `description` metadata. This provides **just enough information** for Claude to know the skill exists and what it's for, without loading the whole file.
+
+```yaml
+# Example: PDF Skill metadata
+name: "PDF Skill"
+description: "Manipulate PDF documents, fill forms, extract text"
+```
+
+**Key Point:** This metadata is pre-loaded at startup, acting like a library catalog.
+
+### Level 2: The Main Chapter
+
+Claude reads the main body of the SKILL.md file **only if the metadata suggests the skill is relevant** to the user's task. This level provides the core instructions and workflow for the skill.
+
+### Level 3 & Beyond: The Appendices
+
+Additional linked files within the skill directory (e.g., `forms.md`, `reference.md`) contain highly specific or lengthy information. Claude reads these files **only on an as-needed basis** for very specific sub-tasks.
+
+## Progressive Disclosure in Action
+
+Let's walk through a practical example with a "PDF Skill" designed to give Claude abilities to manipulate PDF documents.
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Claude
+    participant L1 as Level 1<br/>Metadata
+    participant L2 as Level 2<br/>SKILL.md
+    participant L3 as Level 3<br/>forms.md
+
+    Note over C,L1: Startup: Metadata pre-loaded
+
+    U->>C: "Fill out this PDF form"
+
+    rect rgb(227, 242, 253)
+        Note over C,L1: Step 1: Pattern Match
+        C->>L1: Check skill descriptions
+        L1-->>C: PDF Skill looks relevant
+    end
+
+    rect rgb(255, 243, 224)
+        Note over C,L2: Step 2: Load Core Instructions
+        C->>L2: Read pdf/SKILL.md
+        L2-->>C: Core PDF instructions loaded
+    end
+
+    rect rgb(232, 245, 233)
+        Note over C,L3: Step 3: Load Specific Details
+        C->>L3: Read forms.md
+        L3-->>C: Form-filling details loaded
+    end
+
+    C->>U: Executes task with full context
+```
+
+### Step-by-Step Breakdown
+
+| Step | Action | Context Window State |
+|------|--------|---------------------|
+| **Startup** | Core instructions + Level 1 metadata loaded | Minimal, ready for any task |
+| **Skill Trigger** | User asks to fill PDF form | Pattern matched to PDF Skill |
+| **Level 2 Load** | Claude reads SKILL.md body | Core instructions added |
+| **Level 3 Load** | Claude reads forms.md | Specialized knowledge added |
+| **Execution** | Claude performs the task | All necessary context present |
+
+## Why This Matters: Key Benefits
+
+Progressive Disclosure provides three significant advantages that change what's possible with AI agents.
+
+### 1. Solves the Context Window Limit
+
+```mermaid
+flowchart TB
+    subgraph Traditional["Traditional Approach"]
+        direction TB
+        A1[Load Everything]
+        A2[Context Overflow]
+        A3[Performance Loss]
+        A1 --> A2 --> A3
+    end
+
+    subgraph Progressive["Progressive Disclosure"]
+        direction TB
+        B1[Load Metadata Only]
+        B2[Load as Needed]
+        B3[Unlimited Potential]
+        B1 --> B2 --> B3
+    end
+
+    style Traditional fill:#ffebee,stroke:#c62828
+    style Progressive fill:#e8f5e9,stroke:#2e7d32
+```
+
+By loading information only as needed, agents don't have to read the entirety of a skill at once. This elegant solution means that **the amount of context that can be bundled into a skill is effectively unbounded**.
+
+> Developers can build an entire library of organizational knowledge, and the agent can navigate it like a human would—one document at a time.
+
+### 2. Ensures Efficiency and Scalability
+
+The system keeps interactions lean and fast by loading only what is necessary for the immediate task.
+
+| Metric | Without Progressive Disclosure | With Progressive Disclosure |
+|--------|-------------------------------|----------------------------|
+| Startup Time | Slow (load everything) | Fast (metadata only) |
+| Memory Usage | High (all skills loaded) | Low (on-demand loading) |
+| Response Speed | Degraded | Optimal |
+| Skill Capacity | Limited | Unlimited |
+
+### 3. Combines Natural Language with Deterministic Code
+
+Skills can include pre-written scripts that Claude can execute as tools. For tasks like sorting a large dataset or extracting form fields from a PDF, traditional code is far more efficient and reliable than generating a solution with a language model.
+
+```mermaid
+flowchart LR
+    subgraph Agent["Claude Agent"]
+        NL[Natural Language<br/>Reasoning & Strategy]
+        Code[Deterministic Code<br/>Precise Operations]
+    end
+
+    Task((Task)) --> NL
+    NL -->|"Complex reasoning"| Decision
+    NL -->|"Precise operations"| Code
+    Code --> Result((Result))
+    Decision --> Result
+```
+
+**Benefits:**
+- Natural language for reasoning and strategy
+- Deterministic code for precise, repeatable operations
+- Consistency and cost savings
+
+## Practical Implementation Tips
+
+When building Agent Skills with Progressive Disclosure in mind:
+
+### Structure Your SKILL.md Effectively
+
+```markdown
+# Good Structure
+---
+name: "My Skill"
+description: "Brief, searchable description"
+---
+
+## Quick Start (Level 2)
+Core instructions that apply to most use cases.
+
+## See Also
+- [detailed-guide.md](./detailed-guide.md) - For complex scenarios
+- [reference.md](./reference.md) - API documentation
+```
+
+### Keep Metadata Descriptive but Concise
+
+The Level 1 metadata should be **searchable and distinctive**:
+
+| Good Description | Why It Works |
+|-----------------|--------------|
+| "Fill PDF forms, extract text, merge documents" | Specific, actionable keywords |
+| "Handle PDF files" | Too vague, might not trigger correctly |
+
+### Organize Appendices Logically
+
+```
+my-skill/
+  SKILL.md           # Core instructions
+  forms.md           # Form-specific details
+  extraction.md      # Text extraction details
+  scripts/
+    fill_form.py     # Deterministic code
+    extract_text.py
+```
+
+## Conclusion
+
+Progressive Disclosure is a system of loading information in smart, incremental layers—starting with a brief summary, moving to core instructions, and finally accessing detailed appendices as needed.
+
+```mermaid
+flowchart TB
+    subgraph Summary["The Progressive Disclosure Principle"]
+        P1[Start with metadata catalog]
+        P2[Load core instructions when relevant]
+        P3[Access details only when needed]
+        P4[Execute with focused context]
+
+        P1 --> P2 --> P3 --> P4
+    end
+
+    style Summary fill:#f3e5f5,stroke:#7b1fa2
+```
+
+This method allows Claude to be equipped with a vast library of specialized knowledge while keeping its active "workbench"—the context window—clean, organized, and focused on the task at hand.
+
+**Key Takeaways:**
+
+| Principle | Benefit |
+|-----------|---------|
+| Layered Loading | Unlimited skill capacity |
+| On-Demand Access | Maximum efficiency |
+| Smart Caching | Fast response times |
+| Code Integration | Reliable operations |
+
+Progressive Disclosure is what allows Agent Skills to be both incredibly deep in their expertise and remarkably efficient in their execution—the best of both worlds for AI agents.
+
+---
+
+## References
+
+- [Claude Code Agent Skills Documentation](https://docs.anthropic.com/en/docs/claude-code/skills) - Anthropic Docs
+- [Building effective agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
+
+---
+
+*Ready to build smarter AI agents? Start thinking about Progressive Disclosure—it's the key to creating agents that are both knowledgeable and efficient.*
+0:{"buildId":"CbQ5AxUVM04M3gG88sYQ7","rsc":["$","$1","c",{"children":[["$","$L2",null,{"initialData":{"zh":{"posts":[{"slug":"build-personal-ai-workflow","locale":"zh","frontmatter":{"title":"从零搭建个人 AI 工作流：理解原理、善用工具、拥有基础设施","date":"2026-03-17","excerpt":"一篇文章串联 AI 底层原理、Claude Code 实战技巧、订阅避坑、私有化部署到对话式运维，帮你搭建完整的个人 AI 工作流。","category":"tutorial","tags":["AI","Claude Code","OpenClaw","Docker","工作流","LLM"]},"content":"$3","readingTime":4,"wordCount":630},{"slug":"claude-agent-sdk-study-guide","locale":"zh","frontmatter":{"title":"Claude Agent SDK 学习卡片","date":"2026-01-09","excerpt":"通过精心设计的知识卡片，快速掌握 Claude Agent SDK 的核心概念。","category":"tutorial","tags":["AI","Claude","Agent SDK","学习指南"]},"content":"$4","readingTime":6,"wordCount":1004},{"slug":"claude-agent-sdk-guide","locale":"zh","frontmatter":{"title":"Claude Agent SDK 入门指南：让你的 AI 拥有一台电脑","date":"2026-01-05","excerpt":"通过三个关键阶段学习如何使用 Anthropic 的 Claude Agent SDK 构建强大的 AI 助手：收集上下文、执行操作和验证结果。","category":"tutorial","tags":["AI","Claude","Agent SDK","LLM","自动化"]},"content":"$5","readingTime":4,"wordCount":744},{"slug":"hong-kong-bank-account-guide","locale":"zh","frontmatter":{"title":"2026 香港银行开户完全指南：从零到一的实操教程","date":"2026-01-05","excerpt":"详细介绍香港银行账户开户的完整流程，包括银行选择、材料准备、开户方式对比，以及实用的注意事项。","category":"tutorial","tags":["香港银行","开户指南","跨境金融","理财"]},"content":"$6","readingTime":5,"wordCount":828},{"slug":"multi-agent-ai-systems","locale":"zh","frontmatter":{"title":"构建生产级多智能体 AI 系统架构指南","date":"2026-01-05","excerpt":"深入探讨多智能体 AI 系统的架构设计、提示工程、评估策略和生产可靠性工程，帮助你构建能够处理复杂研究任务的 AI 系统。","category":"architecture","tags":["AI","多智能体系统","LLM","系统架构","提示工程"]},"content":"$7","readingTime":4,"wordCount":660},{"slug":"progressive-disclosure-agent-skills","locale":"zh","frontmatter":{"title":"渐进式披露：Claude Code 如何像智能图书管理员一样加载知识","date":"2026-01-05","excerpt":"探索 Anthropic 的 Agent Skills 如何使用渐进式披露原则，在恰当的时机为 Claude 提供恰当的信息，让 AI 智能体既博学又高效。","category":"tutorial","tags":["AI","Claude","Agent Skills","渐进式披露","上下文管理"]},"content":"$8","readingTime":3,"wordCount":592}],"tags":["AI","Agent SDK","Agent Skills","Claude","Claude Code","Docker","LLM","OpenClaw","上下文管理","多智能体系统","学习指南","工作流","开户指南","提示工程","渐进式披露","理财","系统架构","自动化","跨境金融","香港银行"]},"en":{"posts":[{"slug":"claude-agent-sdk-study-guide","locale":"en","frontmatter":{"title":"Claude Agent SDK Study Cards","date":"2026-01-09","excerpt":"Master Claude Agent SDK core concepts through carefully designed knowledge cards.","category":"tutorial","tags":["AI","Claude","Agent SDK","Study Guide"]},"content":"$9","readingTime":9,"wordCount":1662},{"slug":"claude-agent-sdk-guide","locale":"en","frontmatter":{"title":"A Beginner's Guide to the Claude Agent SDK: Giving Your AI a Computer","date":"2026-01-05","excerpt":"Learn how to build powerful AI assistants with Anthropic's Claude Agent SDK through the three key stages: Gathering Context, Taking Action, and Verifying Work.","category":"tutorial","tags":["AI","Claude","Agent SDK","LLM","Automation"]},"content":"$a","readingTime":10,"wordCount":1828},{"slug":"hong-kong-bank-account-guide","locale":"en","frontmatter":{"title":"2026 Complete Guide to Opening a Hong Kong Bank Account","date":"2026-01-05","excerpt":"A comprehensive guide to opening a Hong Kong bank account, including bank comparisons, required documents, application methods, and practical tips for success.","category":"tutorial","tags":["Hong Kong Banking","Account Opening","Cross-border Finance","Financial Planning"]},"content":"$b","readingTime":9,"wordCount":1657},{"slug":"multi-agent-ai-systems","locale":"en","frontmatter":{"title":"Architecting Production-Grade Multi-Agent AI Systems","date":"2026-01-05","excerpt":"A comprehensive guide to building multi-agent AI systems for complex research tasks, covering orchestrator-worker architecture, prompt engineering, evaluation strategies, and production reliability.","category":"architecture","tags":["AI","Multi-Agent Systems","LLM","System Architecture","Prompt Engineering"]},"content":"$c","readingTime":8,"wordCount":1553},{"slug":"progressive-disclosure-agent-skills","locale":"en","frontmatter":{"title":"Progressive Disclosure: How Claude Code Loads Knowledge Like a Smart Librarian","date":"2026-01-05","excerpt":"Discover how Anthropic's Agent Skills use Progressive Disclosure to give Claude exactly the right information at the right time, making AI agents both more knowledgeable and efficient.","category":"tutorial","tags":["AI","Claude","Agent Skills","Progressive Disclosure","Context Management"]},"content":"$d","readingTime":7,"wordCount":1378}],"tags":["AI","Account Opening","Agent SDK","Agent Skills","Automation","Claude","Context Management","Cross-border Finance","Financial Planning","Hong Kong Banking","LLM","Multi-Agent Systems","Progressive Disclosure","Prompt Engineering","Study Guide","System Architecture"]}},"categories":["tech","architecture","career","life","tutorial"]}],["$Le","$Lf"],"$L10"]}],"loading":null,"isPartial":false}
+e:["$","script","script-0",{"src":"/_next/static/chunks/7f7037a3020e8af3.js","async":true}]
+f:["$","script","script-1",{"src":"/_next/static/chunks/1da220cf8a6504ce.js","async":true}]
+10:["$","$L11",null,{"children":["$","$12",null,{"name":"Next.MetadataOutlet","children":"$@13"}]}]
+13:null

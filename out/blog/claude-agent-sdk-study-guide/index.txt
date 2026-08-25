@@ -1,0 +1,1319 @@
+1:"$Sreact.fragment"
+2:I[544636,["/_next/static/chunks/e5e24ea30d8e5506.js"],"Providers"]
+3:I[339756,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"default"]
+4:I[837457,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"default"]
+6:I[897367,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+9:I[897367,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"ViewportBoundary"]
+b:I[897367,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"MetadataBoundary"]
+d:I[168027,[],"default"]
+:HL["/_next/static/chunks/8c653baff5abcde6.css","style"]
+:HL["/_next/static/media/70bc3e132a0a741e-s.p.15008bfb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"P":null,"b":"CbQ5AxUVM04M3gG88sYQ7","c":["","blog","claude-agent-sdk-study-guide",""],"q":"","i":false,"f":[[["",{"children":["blog",{"children":[["slug","claude-agent-sdk-study-guide","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/8c653baff5abcde6.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/e5e24ea30d8e5506.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"zh-CN","suppressHydrationWarning":true,"children":["$","body",null,{"className":"jetbrains_mono_84d6efd-module__5Hl15a__variable antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":["$L5",[["$","script","script-0",{"src":"/_next/static/chunks/2acc3ebc8cf569a8.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/_next/static/chunks/db204158fca7d394.js","async":true,"nonce":"$undefined"}],["$","script","script-2",{"src":"/_next/static/chunks/1a5c08a887ff152e.js","async":true,"nonce":"$undefined"}],["$","script","script-3",{"src":"/_next/static/chunks/5dc3f1c23f9ab1e6.js","async":true,"nonce":"$undefined"}],["$","script","script-4",{"src":"/_next/static/chunks/6a765fc0ba8c0ddc.js","async":true,"nonce":"$undefined"}],["$","script","script-5",{"src":"/_next/static/chunks/1da220cf8a6504ce.js","async":true,"nonce":"$undefined"}],["$","script","script-6",{"src":"/_next/static/chunks/fa21defe62af84dd.js","async":true,"nonce":"$undefined"}],["$","script","script-7",{"src":"/_next/static/chunks/2d6a406dfef08971.js","async":true,"nonce":"$undefined"}],["$","script","script-8",{"src":"/_next/static/chunks/9f888ed3ac694ac5.js","async":true,"nonce":"$undefined"}],["$","script","script-9",{"src":"/_next/static/chunks/6abdcecffe56eb8c.js","async":true,"nonce":"$undefined"}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],{},null,false,false]},null,false,false]},null,false,false]},null,false,false],["$","$1","h",{"children":[null,["$","$L9",null,{"children":"$La"}],["$","div",null,{"hidden":true,"children":["$","$Lb",null,{"children":["$","$7",null,{"name":"Next.Metadata","children":"$Lc"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],false]],"m":"$undefined","G":["$d",[]],"S":true}
+e:I[663270,["/_next/static/chunks/e5e24ea30d8e5506.js","/_next/static/chunks/2acc3ebc8cf569a8.js","/_next/static/chunks/db204158fca7d394.js","/_next/static/chunks/1a5c08a887ff152e.js","/_next/static/chunks/5dc3f1c23f9ab1e6.js","/_next/static/chunks/6a765fc0ba8c0ddc.js","/_next/static/chunks/1da220cf8a6504ce.js","/_next/static/chunks/fa21defe62af84dd.js","/_next/static/chunks/2d6a406dfef08971.js","/_next/static/chunks/9f888ed3ac694ac5.js","/_next/static/chunks/6abdcecffe56eb8c.js"],"BlogDetailPage",1]
+f:T274c,
+import { Card, CardGrid } from '@/components/Card';
+
+<div className="sdk-cards">
+
+<div className="video-container">
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/TqC1qOfiVcQ"
+  title="Claude Agent SDK"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+</div>
+
+---
+
+## 核心架构
+
+<div className="card-grid cols-3">
+
+<div className="study-card accent-blue">
+<div className="card-icon">🔄</div>
+<h3>智能体循环</h3>
+<div className="card-content">
+
+**收集** → **执行** → **验证** → 循环
+
+- 收集：搜索、读取、子智能体
+- 执行：Bash、工具、代码生成
+- 验证：规则、视觉、LLM
+
+</div>
+</div>
+
+<div className="study-card accent-purple">
+<div className="card-icon">🛠️</div>
+<h3>Bash = 超级工具</h3>
+<div className="card-content">
+
+**"第一代码模式"**
+
+```bash
+tail -f log | grep ERROR
+```
+
+通用 + 可组合 + 动态脚本
+
+</div>
+</div>
+
+<div className="study-card accent-green">
+<div className="card-icon">🔌</div>
+<h3>MCP 协议</h3>
+<div className="card-content">
+
+**标准化外部集成**
+
+Agent ⟷ MCP ⟷ Slack/GitHub/...
+
+即插即用，自动认证
+
+</div>
+</div>
+
+</div>
+
+---
+
+## 关键组件
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-orange">
+<div className="card-icon">👥</div>
+<h3>子智能体</h3>
+<div className="card-content">
+
+| 优势 | 说明 |
+|:--:|:--|
+| ⚡ | 并行处理多任务 |
+| 📦 | 隔离上下文，返回摘要 |
+
+> 像研究团队的初级成员
+
+</div>
+</div>
+
+<div className="study-card accent-teal">
+<div className="card-icon">📝</div>
+<h3>技能系统</h3>
+<div className="card-content">
+
+| 本质 | 文件夹形式的指令集 |
+|:--:|:--|
+| 机制 | 渐进式上下文披露 |
+| 场景 | 前端设计、文档生成 |
+
+</div>
+</div>
+
+</div>
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-pink">
+<div className="card-icon">🗜️</div>
+<h3>Compact 压缩</h3>
+<div className="card-content">
+
+**问题**：长对话耗尽上下文
+
+**方案**：自动总结历史消息
+
+监测 → 触发 → 摘要 → 继续
+
+</div>
+</div>
+
+<div className="study-card accent-indigo">
+<div className="card-icon">💻</div>
+<h3>代码生成</h3>
+<div className="card-content">
+
+**为什么是核心能力？**
+
+✅ 精确可预测
+✅ 可组合复用
+✅ 处理复杂操作
+
+</div>
+</div>
+
+</div>
+
+---
+
+## 安全模型
+
+<div className="study-card wide accent-red">
+<div className="card-icon">🧀</div>
+<h3>瑞士奶酪防御</h3>
+<div className="card-content defense-layers">
+
+```
+输入 → [模型对齐] → [工具权限] → [沙盒环境] → 安全输出
+         防恶意        解析控制       限制影响
+```
+
+**单层有漏洞，多层叠加确保安全**
+
+</div>
+</div>
+
+<div className="card-grid cols-3">
+
+<div className="study-card small accent-green">
+<h4>规则检查</h4>
+<p>⭐⭐⭐ 快 | 代码/结构数据</p>
+</div>
+
+<div className="study-card small accent-yellow">
+<h4>视觉反馈</h4>
+<p>⭐⭐ 中 | UI/格式化</p>
+</div>
+
+<div className="study-card small accent-orange">
+<h4>LLM 评判</h4>
+<p>⭐ 慢 | 主观质量</p>
+</div>
+
+</div>
+
+---
+
+## 智能体 vs 工作流
+
+<div className="comparison-table">
+
+| | 🤖 智能体 | 📋 工作流 |
+|:--|:--|:--|
+| **输入** | 模糊自然语言 | 明确定义 |
+| **轨迹** | 自主决定 | 预设路径 |
+| **场景** | 探索性任务 | 流程化任务 |
+| **例子** | Claude Code | CI/CD |
+
+</div>
+
+---
+
+## 术语速查
+
+<div className="term-grid">
+
+| 术语 | 一句话定义 |
+|:--|:--|
+| **智能搜索** | 用 grep/tail 主动搜索文件 |
+| **Hooks** | 运行时的确定性验证/插入 |
+| **Compact** | 自动总结防止上下文耗尽 |
+| **上下文工程** | 通过环境结构优化性能 |
+| **Tools** | 原子操作的定义 |
+
+</div>
+
+---
+
+## 自测问答
+
+<details>
+<summary>❓ SDK 的核心设计原则？</summary>
+
+通过终端让智能体访问计算机，使用人类相同的工具。
+
+</details>
+
+<details>
+<summary>❓ 为什么 Bash 最强大？</summary>
+
+通用 + 可组合 + 存储结果 + 动态脚本 + 复用现有软件
+
+</details>
+
+<details>
+<summary>❓ 子智能体的两大优势？</summary>
+
+1. 并行化处理
+2. 隔离上下文，只返回关键信息
+
+</details>
+
+<details>
+<summary>❓ 三种验证方法的选择？</summary>
+
+- 代码 → 规则检查（TypeScript/ESLint）
+- UI → 视觉反馈（截图）
+- 主观内容 → LLM 评判（谨慎）
+
+</details>
+
+---
+
+<div className="checklist">
+
+## 学习进度
+
+- [ ] 智能体循环三阶段
+- [ ] Bash 的核心优势
+- [ ] 子智能体与上下文管理
+- [ ] MCP 协议作用
+- [ ] 瑞士奶酪防御模型
+- [ ] 验证方法选择
+
+</div>
+
+</div>
+
+<style>{`
+.video-container {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe {
+  display: block;
+}
+
+.sdk-cards {
+  --card-radius: 12px;
+  --sdk-blue: #3b82f6;
+  --sdk-purple: #8b5cf6;
+  --sdk-green: #10b981;
+  --sdk-orange: #f59e0b;
+  --sdk-teal: #14b8a6;
+  --sdk-pink: #ec4899;
+  --sdk-indigo: #6366f1;
+  --sdk-red: #ef4444;
+  --sdk-yellow: #eab308;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid.cols-2,
+  .card-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.study-card {
+  background: var(--card);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  border-left: 4px solid var(--sdk-accent, var(--sdk-blue));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.study-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.study-card.wide {
+  grid-column: 1 / -1;
+}
+
+.study-card.small {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.study-card.small h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.study-card.small p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--foreground) !important;
+}
+
+.study-card.accent-blue { --sdk-accent: var(--sdk-blue); }
+.study-card.accent-purple { --sdk-accent: var(--sdk-purple); }
+.study-card.accent-green { --sdk-accent: var(--sdk-green); }
+.study-card.accent-orange { --sdk-accent: var(--sdk-orange); }
+.study-card.accent-teal { --sdk-accent: var(--sdk-teal); }
+.study-card.accent-pink { --sdk-accent: var(--sdk-pink); }
+.study-card.accent-indigo { --sdk-accent: var(--sdk-indigo); }
+.study-card.accent-red { --sdk-accent: var(--sdk-red); }
+.study-card.accent-yellow { --sdk-accent: var(--sdk-yellow); }
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--sdk-accent) !important;
+}
+
+.study-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--sdk-accent) !important;
+}
+
+.card-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--foreground) !important;
+}
+
+.card-content p,
+.card-content li,
+.card-content span {
+  color: var(--foreground) !important;
+}
+
+.card-content strong {
+  color: var(--foreground) !important;
+  font-weight: 600;
+}
+
+.card-content table {
+  width: 100%;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.card-content th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.card-content td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.card-content pre {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.card-content code {
+  background: var(--card);
+  color: var(--accent);
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+}
+
+.card-content blockquote {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  background: var(--card);
+  border-left: 3px solid var(--sdk-accent);
+  color: var(--foreground) !important;
+}
+
+.defense-layers pre {
+  text-align: center;
+  background: transparent !important;
+  border: none !important;
+  font-size: 0.85rem;
+  color: var(--foreground) !important;
+}
+
+.comparison-table {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
+.comparison-table th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.comparison-table td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.term-grid {
+  margin: 1rem 0;
+}
+
+.term-grid table {
+  width: 100%;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+}
+
+.term-grid th {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.term-grid td {
+  background: var(--background);
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+details summary {
+  font-weight: 500;
+  user-select: none;
+  color: var(--foreground) !important;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+details p,
+details li,
+details ol {
+  color: var(--foreground) !important;
+}
+
+.checklist {
+  background: var(--card);
+  border: 2px solid var(--success);
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  margin-top: 2rem;
+}
+
+.checklist h2 {
+  margin-top: 0;
+  color: var(--success) !important;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border);
+  color: var(--foreground) !important;
+}
+`}</style>
+10:T38ff,
+import { Card, CardGrid } from '@/components/Card';
+
+<div className="sdk-cards">
+
+<div className="video-container">
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/TqC1qOfiVcQ"
+  title="Claude Agent SDK"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+</div>
+
+---
+
+## Core Architecture
+
+<div className="card-grid cols-3">
+
+<div className="study-card accent-blue">
+<div className="card-icon">🔄</div>
+<h3>Agentic Loop</h3>
+<div className="card-content">
+
+**Gather** → **Act** → **Verify** → Loop
+
+- Gather: Search, read, subagents
+- Act: Bash, tools, code generation
+- Verify: Rules, visual, LLM
+
+</div>
+</div>
+
+<div className="study-card accent-purple">
+<div className="card-icon">🛠️</div>
+<h3>Bash = Super Tool</h3>
+<div className="card-content">
+
+**"First Code Mode"**
+
+```bash
+tail -f log | grep ERROR
+```
+
+General + Composable + Dynamic
+
+</div>
+</div>
+
+<div className="study-card accent-green">
+<div className="card-icon">🔌</div>
+<h3>MCP Protocol</h3>
+<div className="card-content">
+
+**Standardized Integration**
+
+Agent ⟷ MCP ⟷ Slack/GitHub/...
+
+Plug & play, auto-auth
+
+</div>
+</div>
+
+</div>
+
+---
+
+## Key Components
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-orange">
+<div className="card-icon">👥</div>
+<h3>Subagents</h3>
+<div className="card-content">
+
+| Benefit | Description |
+|:--:|:--|
+| ⚡ | Parallel task processing |
+| 📦 | Isolated context, return summary |
+
+> Like junior researchers on a team
+
+</div>
+</div>
+
+<div className="study-card accent-teal">
+<div className="card-icon">📝</div>
+<h3>Skills System</h3>
+<div className="card-content">
+
+| Essence | Folder-based instruction sets |
+|:--:|:--|
+| Mechanism | Progressive context disclosure |
+| Use Cases | Frontend design, doc generation |
+
+</div>
+</div>
+
+</div>
+
+<div className="card-grid cols-2">
+
+<div className="study-card accent-pink">
+<div className="card-icon">🗜️</div>
+<h3>Compaction</h3>
+<div className="card-content">
+
+**Problem**: Long conversations exhaust context
+
+**Solution**: Auto-summarize history
+
+Monitor → Trigger → Summarize → Continue
+
+</div>
+</div>
+
+<div className="study-card accent-indigo">
+<div className="card-icon">💻</div>
+<h3>Code Generation</h3>
+<div className="card-content">
+
+**Why is it core?**
+
+✅ Precise & predictable
+✅ Composable & reusable
+✅ Handles complex operations
+
+</div>
+</div>
+
+</div>
+
+---
+
+## Security Model
+
+<div className="study-card wide accent-red">
+<div className="card-icon">🧀</div>
+<h3>Swiss Cheese Defense</h3>
+<div className="card-content defense-layers">
+
+```
+Input → [Model Alignment] → [Tool Permissions] → [Sandboxing] → Safe Output
+           Prevent evil       Parse & control      Limit impact
+```
+
+**Single layers may have holes, but stacked layers ensure security**
+
+</div>
+</div>
+
+<div className="card-grid cols-3">
+
+<div className="study-card small accent-green">
+<h4>Rules Check</h4>
+<p>⭐⭐⭐ Fast | Code/structured data</p>
+</div>
+
+<div className="study-card small accent-yellow">
+<h4>Visual Feedback</h4>
+<p>⭐⭐ Medium | UI/formatting</p>
+</div>
+
+<div className="study-card small accent-orange">
+<h4>LLM as Judge</h4>
+<p>⭐ Slow | Subjective quality</p>
+</div>
+
+</div>
+
+---
+
+## Agent vs Workflow
+
+<div className="comparison-table">
+
+| | 🤖 Agent | 📋 Workflow |
+|:--|:--|:--|
+| **Input** | Ambiguous NL | Well-defined |
+| **Path** | Self-determined | Predefined |
+| **Best For** | Exploratory tasks | Process tasks |
+| **Example** | Claude Code | CI/CD |
+
+</div>
+
+---
+
+## Term Quick Reference
+
+<div className="term-grid">
+
+| Term | One-line Definition |
+|:--|:--|
+| **Agentic Search** | Active file search via grep/tail |
+| **Hooks** | Runtime deterministic verification/injection |
+| **Compact** | Auto-summarize to prevent context exhaustion |
+| **Context Engineering** | Optimize performance via environment structure |
+| **Tools** | Atomic operation definitions |
+
+</div>
+
+---
+
+## Self-Test Q&A
+
+<details>
+<summary>❓ What's the SDK's core design principle?</summary>
+
+Give agents computer access via terminal, using the same tools humans use.
+
+</details>
+
+<details>
+<summary>❓ Why is Bash the most powerful?</summary>
+
+General + Composable + Store results + Dynamic scripts + Reuse existing software
+
+</details>
+
+<details>
+<summary>❓ Two main benefits of subagents?</summary>
+
+1. Parallelization
+2. Isolated context, return only key info
+
+</details>
+
+<details>
+<summary>❓ How to choose verification methods?</summary>
+
+- Code → Rules check (TypeScript/ESLint)
+- UI → Visual feedback (screenshots)
+- Subjective → LLM as judge (use carefully)
+
+</details>
+
+---
+
+<div className="checklist">
+
+## Learning Progress
+
+- [ ] Three-stage agentic loop
+- [ ] Bash core advantages
+- [ ] Subagents & context management
+- [ ] MCP protocol role
+- [ ] Swiss Cheese Defense model
+- [ ] Verification method selection
+
+</div>
+
+</div>
+
+<style>{`
+.video-container {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe {
+  display: block;
+}
+
+.sdk-cards {
+  --card-radius: 12px;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-teal: #14b8a6;
+  --accent-pink: #ec4899;
+  --accent-indigo: #6366f1;
+  --accent-red: #ef4444;
+  --accent-yellow: #eab308;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card-grid.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .card-grid.cols-2,
+  .card-grid.cols-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.study-card {
+  background: var(--card-bg, #f8fafc);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+  border-left: 4px solid var(--accent, #3b82f6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.study-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.study-card.wide {
+  grid-column: 1 / -1;
+}
+
+.study-card.small {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.study-card.small h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.study-card.small p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.study-card.accent-blue { --accent: var(--accent-blue); }
+.study-card.accent-purple { --accent: var(--accent-purple); }
+.study-card.accent-green { --accent: var(--accent-green); }
+.study-card.accent-orange { --accent: var(--accent-orange); }
+.study-card.accent-teal { --accent: var(--accent-teal); }
+.study-card.accent-pink { --accent: var(--accent-pink); }
+.study-card.accent-indigo { --accent: var(--accent-indigo); }
+.study-card.accent-red { --accent: var(--accent-red); }
+.study-card.accent-yellow { --accent: var(--accent-yellow); }
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.study-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--accent);
+}
+
+.card-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.card-content table {
+  width: 100%;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.card-content pre {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.card-content blockquote {
+  margin: 0.5rem 0;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.defense-layers pre {
+  text-align: center;
+  background: transparent;
+  font-size: 0.85rem;
+}
+
+.comparison-table {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+}
+
+.term-grid {
+  margin: 1rem 0;
+}
+
+.term-grid table {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+details summary {
+  font-weight: 500;
+  user-select: none;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+.checklist {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  margin-top: 2rem;
+}
+
+.checklist h2 {
+  margin-top: 0;
+  color: #059669;
+}
+
+.checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #d1fae5;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .sdk-cards {
+    --accent-blue: #93c5fd;
+    --accent-purple: #c4b5fd;
+    --accent-green: #6ee7b7;
+    --accent-orange: #fcd34d;
+    --accent-teal: #5eead4;
+    --accent-pink: #f9a8d4;
+    --accent-indigo: #a5b4fc;
+    --accent-red: #fca5a5;
+    --accent-yellow: #fde047;
+  }
+
+  .study-card {
+    --card-bg: #1e293b !important;
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+
+  .study-card * {
+    color: inherit;
+  }
+
+  .study-card h3,
+  .study-card h4 {
+    color: var(--accent) !important;
+  }
+
+  .study-card.small p {
+    color: #e2e8f0 !important;
+  }
+
+  .card-content {
+    color: #f1f5f9 !important;
+  }
+
+  .card-content p,
+  .card-content li,
+  .card-content span {
+    color: #f1f5f9 !important;
+  }
+
+  .card-content strong {
+    color: #ffffff !important;
+  }
+
+  .card-content table {
+    border: 1px solid #475569;
+  }
+
+  .card-content th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .card-content td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .card-content pre {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #475569;
+  }
+
+  .card-content code {
+    background: #334155 !important;
+    color: #e2e8f0 !important;
+  }
+
+  .card-content blockquote {
+    background: #334155 !important;
+    border-left: 3px solid var(--accent);
+    color: #e2e8f0 !important;
+  }
+
+  .defense-layers pre {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+    border: none !important;
+  }
+
+  .comparison-table table {
+    border: 1px solid #475569;
+  }
+
+  .comparison-table th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .comparison-table td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .term-grid table {
+    border: 1px solid #475569;
+  }
+
+  .term-grid th {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+  }
+
+  .term-grid td {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  details {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+
+  details summary {
+    color: #ffffff !important;
+  }
+
+  details p,
+  details li,
+  details ol {
+    color: #e2e8f0 !important;
+  }
+
+  .checklist {
+    background: #1e293b !important;
+    border: 2px solid #10b981 !important;
+  }
+
+  .checklist h2 {
+    color: #6ee7b7 !important;
+  }
+
+  .checklist li {
+    color: #f1f5f9 !important;
+    border-bottom-color: #334155 !important;
+  }
+
+  .video-container {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  hr {
+    border-color: #475569 !important;
+  }
+}
+
+/* Class-based dark mode */
+:global(.dark) .sdk-cards {
+  --accent-blue: #93c5fd;
+  --accent-purple: #c4b5fd;
+  --accent-green: #6ee7b7;
+  --accent-orange: #fcd34d;
+  --accent-teal: #5eead4;
+  --accent-pink: #f9a8d4;
+  --accent-indigo: #a5b4fc;
+  --accent-red: #fca5a5;
+  --accent-yellow: #fde047;
+}
+
+:global(.dark) .study-card {
+  --card-bg: #1e293b !important;
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .study-card * {
+  color: inherit;
+}
+
+:global(.dark) .study-card h3,
+:global(.dark) .study-card h4 {
+  color: var(--accent) !important;
+}
+
+:global(.dark) .study-card.small p {
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .card-content {
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .card-content p,
+:global(.dark) .card-content li,
+:global(.dark) .card-content span {
+  color: #f1f5f9 !important;
+}
+
+:global(.dark) .card-content strong {
+  color: #ffffff !important;
+}
+
+:global(.dark) .card-content table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .card-content th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .card-content td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .card-content pre {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #475569;
+}
+
+:global(.dark) .card-content code {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .card-content blockquote {
+  background: #334155 !important;
+  border-left: 3px solid var(--accent);
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .defense-layers pre {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+}
+
+:global(.dark) .comparison-table table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .comparison-table th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .comparison-table td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .term-grid table {
+  border: 1px solid #475569;
+}
+
+:global(.dark) .term-grid th {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) .term-grid td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) details {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #475569 !important;
+}
+
+:global(.dark) details summary {
+  color: #ffffff !important;
+}
+
+:global(.dark) details p,
+:global(.dark) details li,
+:global(.dark) details ol {
+  color: #e2e8f0 !important;
+}
+
+:global(.dark) .checklist {
+  background: #1e293b !important;
+  border: 2px solid #10b981 !important;
+}
+
+:global(.dark) .checklist h2 {
+  color: #6ee7b7 !important;
+}
+
+:global(.dark) .checklist li {
+  color: #f1f5f9 !important;
+  border-bottom-color: #334155 !important;
+}
+
+:global(.dark) .video-container {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+:global(.dark) hr {
+  border-color: #475569 !important;
+}
+`}</style>
+5:["$","$Le",null,{"posts":{"zh":{"slug":"claude-agent-sdk-study-guide","locale":"zh","frontmatter":{"title":"Claude Agent SDK 学习卡片","date":"2026-01-09","excerpt":"通过精心设计的知识卡片，快速掌握 Claude Agent SDK 的核心概念。","category":"tutorial","tags":["AI","Claude","Agent SDK","学习指南"]},"content":"$f","readingTime":6,"wordCount":1004},"en":{"slug":"claude-agent-sdk-study-guide","locale":"en","frontmatter":{"title":"Claude Agent SDK Study Cards","date":"2026-01-09","excerpt":"Master Claude Agent SDK core concepts through carefully designed knowledge cards.","category":"tutorial","tags":["AI","Claude","Agent SDK","Study Guide"]},"content":"$10","readingTime":9,"wordCount":1662}}}]
+a:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+11:I[27201,["/_next/static/chunks/d96012bcfc98706a.js","/_next/static/chunks/963c71eec1d89c3f.js"],"IconMark"]
+8:null
+c:[["$","title","0",{"children":"Claude Agent SDK 学习卡片"}],["$","meta","1",{"name":"description","content":"通过精心设计的知识卡片，快速掌握 Claude Agent SDK 的核心概念。"}],["$","meta","2",{"name":"author","content":"洪灵"}],["$","meta","3",{"name":"keywords","content":"洪灵,研发效能,质量工程,Codex,金融支付,Java,分布式系统"}],["$","meta","4",{"property":"og:title","content":"Claude Agent SDK 学习卡片"}],["$","meta","5",{"property":"og:description","content":"通过精心设计的知识卡片，快速掌握 Claude Agent SDK 的核心概念。"}],["$","meta","6",{"property":"og:type","content":"article"}],["$","meta","7",{"property":"article:published_time","content":"2026-01-09"}],["$","meta","8",{"property":"article:tag","content":"AI"}],["$","meta","9",{"property":"article:tag","content":"Claude"}],["$","meta","10",{"property":"article:tag","content":"Agent SDK"}],["$","meta","11",{"property":"article:tag","content":"学习指南"}],["$","meta","12",{"name":"twitter:card","content":"summary"}],["$","meta","13",{"name":"twitter:title","content":"Claude Agent SDK 学习卡片"}],["$","meta","14",{"name":"twitter:description","content":"通过精心设计的知识卡片，快速掌握 Claude Agent SDK 的核心概念。"}],["$","link","15",{"rel":"icon","href":"/favicon.ico?favicon.0b3bf435.ico","sizes":"256x256","type":"image/x-icon"}],["$","$L11","16",{}]]
