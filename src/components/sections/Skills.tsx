@@ -1,80 +1,49 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { skills } from "@/data/profile";
 import { useLanguage } from "@/i18n";
-
-const skillIcons = {
-  languages: "💻",
-  frameworks: "🏗️",
-  middleware: "⚡",
-  databases: "🗄️",
-  cloudNative: "☁️",
-  practices: "🎯",
-  dataAI: "🤖",
-  security: "🔐",
-} as const;
 
 type SkillKey = keyof typeof skills;
 
 export function Skills() {
-  const { t } = useLanguage();
-
-  const skillCategories: { key: SkillKey; label: string; icon: string }[] = [
-    { key: "languages", label: t.skills.categories.languages, icon: skillIcons.languages },
-    { key: "frameworks", label: t.skills.categories.frameworks, icon: skillIcons.frameworks },
-    { key: "middleware", label: t.skills.categories.middleware, icon: skillIcons.middleware },
-    { key: "databases", label: t.skills.categories.databases, icon: skillIcons.databases },
-    { key: "cloudNative", label: t.skills.categories.cloudNative, icon: skillIcons.cloudNative },
-    { key: "practices", label: t.skills.categories.practices, icon: skillIcons.practices },
-    { key: "dataAI", label: t.skills.categories.dataAI, icon: skillIcons.dataAI },
-    { key: "security", label: t.skills.categories.security, icon: skillIcons.security },
+  const { t, locale } = useLanguage();
+  const categories: { key: SkillKey; label: string }[] = [
+    { key: "aiEngineering", label: t.skills.categories.aiEngineering },
+    { key: "quality", label: t.skills.categories.quality },
+    { key: "payments", label: t.skills.categories.payments },
+    { key: "architecture", label: t.skills.categories.architecture },
+    { key: "infrastructure", label: t.skills.categories.infrastructure },
   ];
 
   return (
-    <section id="skills" className="py-20 px-4 bg-[var(--card)]">
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Section title */}
-          <div className="flex items-center gap-3 mb-8">
-            <span className="text-[var(--success)]">$</span>
-            <h2 className="text-2xl font-bold">{t.skills.title}</h2>
+    <section id="skills" className="border-y border-[var(--border)] bg-[var(--surface-muted)] px-5 py-24 md:px-8 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-8 md:grid-cols-[220px_1fr] md:gap-14">
+          <div>
+            <span className="font-mono text-xs tracking-[0.14em] text-[var(--accent)]">03 · SYSTEM</span>
+            <h2 className="mt-4 font-serif text-3xl font-medium text-[var(--foreground)]">
+              {locale === "zh" ? "能力不是清单，是可组合的系统" : "Capabilities form a system, not a list"}
+            </h2>
           </div>
 
-          {/* Skills grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {skillCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={category.key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: categoryIndex * 0.1 }}
-                className="p-4 rounded-lg border border-[var(--border)] bg-[var(--background)]"
-              >
-                <h3 className="text-sm font-semibold text-[var(--accent)] mb-3 flex items-center gap-2">
-                  <span>{category.icon}</span>
-                  {category.label}
-                </h3>
-                <div className="flex flex-wrap gap-2">
+          <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
+            {categories.map((category, index) => (
+              <div key={category.key} className="grid gap-4 py-6 sm:grid-cols-[170px_1fr] sm:items-baseline">
+                <div className="flex items-baseline gap-4">
+                  <span className="font-mono text-xs text-[var(--muted)]">{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className="font-medium text-[var(--foreground)]">{category.label}</h3>
+                </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
                   {skills[category.key].map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 text-sm rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors cursor-default"
-                    >
+                    <span key={skill} className="font-mono text-sm text-[var(--muted)]">
                       {skill}
                     </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

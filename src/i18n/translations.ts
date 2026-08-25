@@ -40,6 +40,8 @@ export interface Translations {
     experienceLabel: string;
     downloadResume: string;
     scrollDown: string;
+    proofLabel: string;
+    resumeDesk: string;
   };
   about: {
     title: string;
@@ -58,14 +60,11 @@ export interface Translations {
   skills: {
     title: string;
     categories: {
-      languages: string;
-      frameworks: string;
-      middleware: string;
-      databases: string;
-      cloudNative: string;
-      practices: string;
-      dataAI: string;
-      security: string;
+      aiEngineering: string;
+      quality: string;
+      payments: string;
+      architecture: string;
+      infrastructure: string;
     };
   };
   projects: {
@@ -131,11 +130,13 @@ export const translations: Record<Locale, Translations> = {
       tableOfContents: "目录",
     },
     hero: {
-      status: "available for opportunities",
+      status: "面向大湾区机会",
       statusLabel: "status",
       experienceLabel: "experience",
       downloadResume: "下载简历",
-      scrollDown: "scroll down",
+      scrollDown: "查看证据",
+      proofLabel: "当前证据",
+      resumeDesk: "按目标岗位阅读",
     },
     about: {
       title: "cat about.md",
@@ -154,14 +155,11 @@ export const translations: Record<Locale, Translations> = {
     skills: {
       title: "ls -la skills/",
       categories: {
-        languages: "语言 / 脚本",
-        frameworks: "框架",
-        middleware: "中间件",
-        databases: "数据库",
-        cloudNative: "云原生",
-        practices: "架构实践",
-        dataAI: "数据智能",
-        security: "安全合规",
+        aiEngineering: "AI 工程化",
+        quality: "质量与交付",
+        payments: "金融支付",
+        architecture: "分布式架构",
+        infrastructure: "工程基础设施",
       },
     },
     projects: {
@@ -225,11 +223,13 @@ export const translations: Record<Locale, Translations> = {
       tableOfContents: "Table of Contents",
     },
     hero: {
-      status: "available for opportunities",
+      status: "Open to Greater Bay Area roles",
       statusLabel: "status",
       experienceLabel: "experience",
       downloadResume: "Download Resume",
-      scrollDown: "scroll down",
+      scrollDown: "View evidence",
+      proofLabel: "Current proof",
+      resumeDesk: "Read by target role",
     },
     about: {
       title: "cat about.md",
@@ -248,14 +248,11 @@ export const translations: Record<Locale, Translations> = {
     skills: {
       title: "ls -la skills/",
       categories: {
-        languages: "Languages",
-        frameworks: "Frameworks",
-        middleware: "Middleware",
-        databases: "Databases",
-        cloudNative: "Cloud Native",
-        practices: "Best Practices",
-        dataAI: "Data & AI",
-        security: "Security",
+        aiEngineering: "AI engineering",
+        quality: "Quality and delivery",
+        payments: "Financial payments",
+        architecture: "Distributed architecture",
+        infrastructure: "Engineering infrastructure",
       },
     },
     projects: {

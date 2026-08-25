@@ -10,13 +10,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "洪灵 | 资深服务端研发工程师",
-  description: "10+ 年 Java 分布式系统研发&架构经验，擅长大型 SaaS 架构、云原生落地及团队技术治理。",
-  keywords: ["洪灵", "后端工程师", "架构师", "Java", "分布式系统", "跨境支付"],
+  title: "洪灵 | AI 研发效能与金融系统技术负责人",
+  description: "10 年 Java 分布式系统经验，将 Codex、Agent Skills、TDD、独立审查与 CI 门禁用于真实金融系统交付。",
+  keywords: ["洪灵", "研发效能", "质量工程", "Codex", "金融支付", "Java", "分布式系统"],
   authors: [{ name: "洪灵" }],
   openGraph: {
-    title: "洪灵 | 资深服务端研发工程师",
-    description: "10+ 年 Java 分布式系统研发&架构经验",
+    title: "洪灵 | AI 研发效能与金融系统技术负责人",
+    description: "AI 研发效能、质量工程与金融支付架构",
     type: "website",
   },
 };
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <body className={`${jetbrainsMono.variable} font-mono antialiased`}>
+      <body className={`${jetbrainsMono.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

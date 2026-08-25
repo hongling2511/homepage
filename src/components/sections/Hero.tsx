@@ -1,101 +1,91 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Terminal } from "@/components/ui/Terminal";
-import { PulseIndicator } from "@/components/ui/PulseIndicator";
-import { getProfile } from "@/data/profile";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowDown, ArrowUpRight, MapPin } from "lucide-react";
+import { getFocusAreas, getProfile } from "@/data/profile";
 import { useLanguage } from "@/i18n";
-import { MapPin, ArrowDown, Download } from "lucide-react";
 
 export function Hero() {
   const { t, locale } = useLanguage();
   const profile = getProfile(locale);
+  const focusAreas = getFocusAreas(locale);
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section className="min-h-screen flex items-center justify-center pt-16 px-4">
-      <div className="max-w-4xl w-full">
+    <section className="relative overflow-hidden px-5 pb-24 pt-32 md:px-8 md:pb-32 md:pt-40">
+      <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[minmax(0,1.22fr)_minmax(320px,.78fr)] lg:items-end">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.65, ease: [0.2, 0, 0, 1] }}
         >
-          <Terminal title="~/hongling" className="mb-8">
-            <div className="space-y-4">
-              {/* Command line */}
-              <div className="flex items-center gap-2">
-                <span className="text-[var(--success)]">$</span>
-                <span className="text-[var(--foreground)]">whoami</span>
-                <span className="animate-blink text-[var(--accent)]">_</span>
-              </div>
+          <div className="mb-8 flex items-center gap-3 font-mono text-xs tracking-[0.14em] text-[var(--muted)]">
+            <span className="h-px w-10 bg-[var(--accent)]" aria-hidden="true" />
+            {profile.eyebrow}
+          </div>
 
-              {/* Name and title */}
-              <div className="pl-4 space-y-2">
-                <h1 className="text-3xl md:text-4xl font-bold text-[var(--foreground)]">
-                  {profile.name}
-                </h1>
-                <p className="text-lg md:text-xl text-[var(--accent)]">
-                  {profile.title}
-                </p>
-              </div>
+          <h1 className="max-w-4xl font-serif text-[clamp(2.7rem,7vw,5.8rem)] font-medium leading-[1.06] text-[var(--foreground)] [text-wrap:balance]">
+            {profile.statement}
+          </h1>
 
-              {/* Status */}
-              <div className="flex items-center gap-2 pl-4">
-                <span className="text-[var(--muted)]">&gt;</span>
-                <span className="text-[var(--muted)]">{t.hero.statusLabel}:</span>
-                <PulseIndicator status="online" />
-                <span className="text-[var(--success)]">{t.hero.status}</span>
-              </div>
+          <p className="mt-8 max-w-2xl text-lg leading-8 text-[var(--muted)] [text-wrap:pretty]">
+            {profile.summary}
+          </p>
 
-              {/* Location */}
-              <div className="flex items-center gap-2 pl-4">
-                <span className="text-[var(--muted)]">&gt;</span>
-                <MapPin className="w-4 h-4 text-[var(--muted)]" />
-                <span className="text-[var(--muted)]">{profile.location}</span>
-              </div>
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-[var(--muted)]">
+            <span className="font-medium text-[var(--foreground)]">{profile.title}</span>
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-[var(--accent)]" />
+              {profile.location}
+            </span>
+          </div>
 
-              {/* Experience */}
-              <div className="flex items-center gap-2 pl-4">
-                <span className="text-[var(--muted)]">&gt;</span>
-                <span className="text-[var(--muted)]">{t.hero.experienceLabel}:</span>
-                <span className="text-[var(--foreground)]">{profile.experience}</span>
-              </div>
-
-              {/* Summary */}
-              <div className="pt-4 pl-4 border-t border-[var(--border)]">
-                <p className="text-[var(--muted)] leading-relaxed">
-                  {profile.summary}
-                </p>
-              </div>
-
-              {/* Download Resume */}
-              <div className="pt-4 pl-4">
-                <a
-                  href={locale === "zh" ? "/resume-zh.pdf" : "/resume-en.pdf"}
-                  download={locale === "zh" ? "洪灵-简历.pdf" : "HongLing-Resume.pdf"}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--accent)] text-[var(--accent-foreground)] font-medium hover:opacity-90 transition-opacity"
-                >
-                  <Download className="w-4 h-4" />
-                  {t.hero.downloadResume}
-                </a>
-              </div>
-            </div>
-          </Terminal>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="flex justify-center"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
+          <a
+            href="#about"
+            className="mt-12 inline-flex min-h-10 items-center gap-2 text-sm font-medium text-[var(--accent)] transition-[transform,color] duration-200 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--background)]"
           >
-            <a
-              href="#about"
-              className="flex flex-col items-center gap-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
-            >
-              <span className="text-sm">{t.hero.scrollDown}</span>
-              <ArrowDown className="w-5 h-5" />
-            </a>
-          </motion.div>
+            {t.hero.scrollDown}
+            <ArrowDown className="h-4 w-4" />
+          </a>
         </motion.div>
+
+        <motion.aside
+          initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: reduceMotion ? 0 : 0.12, ease: [0.2, 0, 0, 1] }}
+          className="bg-[var(--surface)] p-6 shadow-[var(--shadow-paper)] md:p-8"
+          aria-label={t.hero.resumeDesk}
+        >
+          <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+            <span className="font-mono text-xs tracking-[0.12em] text-[var(--muted)]">{t.hero.resumeDesk}</span>
+            <span className="font-mono text-xs text-[var(--accent)]">2 PDF</span>
+          </div>
+
+          <div className="divide-y divide-[var(--border)]">
+            {focusAreas.map((area) => (
+              <a
+                key={area.id}
+                href={area.resumeHref}
+                download
+                className="group flex min-h-28 items-start justify-between gap-5 py-6 transition-[transform,color] duration-200 active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--surface)]"
+              >
+                <span>
+                  <span className="mb-2 block font-mono text-xs text-[var(--accent)]">{area.index}</span>
+                  <span className="block font-serif text-xl font-medium leading-snug text-[var(--foreground)]">
+                    {area.title}
+                  </span>
+                  <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">{area.kicker}</span>
+                </span>
+                <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-[var(--muted)] transition-[transform,color] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent)]" />
+              </a>
+            ))}
+          </div>
+
+          <div className="mt-2 flex items-center gap-3 border-t border-[var(--border)] pt-5 text-xs text-[var(--muted)]">
+            <span className="h-2 w-2 rounded-full bg-[var(--success)]" aria-hidden="true" />
+            {t.hero.status}
+          </div>
+        </motion.aside>
       </div>
     </section>
   );

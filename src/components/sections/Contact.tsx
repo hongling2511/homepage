@@ -1,189 +1,73 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { getProfile, social } from "@/data/profile";
-import { Terminal } from "@/components/ui/Terminal";
-import { useLanguage } from "@/i18n";
-import { Mail, Github, Send, MapPin, Twitter, MessageCircle, X } from "lucide-react";
 import Image from "next/image";
-
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  github: Github,
-  mail: Mail,
-  twitter: Twitter,
-  wechat: MessageCircle,
-};
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, Github, Mail, MessageCircle, X } from "lucide-react";
+import { getProfile } from "@/data/profile";
+import { useLanguage } from "@/i18n";
 
 export function Contact() {
-  const [showWeChatQR, setShowWeChatQR] = useState(false);
-  const { t, locale } = useLanguage();
+  const { locale } = useLanguage();
   const profile = getProfile(locale);
-  const weChatId = social.find((s) => s.icon === "wechat")?.url || "";
-
-  // 过滤掉 email，只显示其他社交链接
-  const filteredSocial = social.filter((item) => item.icon !== "mail");
+  const [showWeChat, setShowWeChat] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section id="contact" className="py-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Section title */}
-          <div className="flex items-center gap-3 mb-8">
-            <span className="text-[var(--success)]">$</span>
-            <h2 className="text-2xl font-bold">{t.contact.title}</h2>
+    <section id="contact" className="border-t border-[var(--border)] bg-[var(--foreground)] px-5 py-24 text-[var(--background)] md:px-8 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <span className="font-mono text-xs tracking-[0.14em] text-[var(--on-dark-muted)]">06 · CONTACT</span>
+        <div className="mt-8 grid gap-12 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <h2 className="max-w-4xl font-serif text-[clamp(2.6rem,6vw,5.2rem)] font-medium leading-[1.05] [text-wrap:balance]">
+              {locale === "zh" ? "如果岗位需要把 AI 变成工程能力，我们可以聊聊。" : "If the role needs AI to become an engineering capability, let’s talk."}
+            </h2>
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-[var(--on-dark-muted)]">
+              {locale === "zh" ? "现居中山，接受大湾区机会。欢迎讨论研发效能、质量工程、金融支付与复杂系统架构。" : "Based in Zhongshan and open to Greater Bay Area roles across AI delivery, quality engineering, payments, and distributed architecture."}
+            </p>
           </div>
 
-          <Terminal title="contact" className="max-w-2xl mx-auto">
-            <div className="space-y-4">
-              {/* Greeting */}
-              <div>
-                <span className="text-[var(--muted)]">{t.contact.greeting}</span>
-              </div>
-
-              {/* Email */}
-              <div className="flex items-center gap-3">
-                <span className="text-[var(--success)]">$</span>
-                <span className="text-[var(--muted)]">{t.contact.emailLabel}:</span>
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="text-[var(--accent)] hover:underline flex items-center gap-2"
-                >
-                  <Mail className="w-4 h-4" />
-                  {profile.email}
-                </a>
-              </div>
-
-              {/* Location */}
-              <div className="flex items-center gap-3">
-                <span className="text-[var(--success)]">$</span>
-                <span className="text-[var(--muted)]">{t.contact.locationLabel}:</span>
-                <span className="text-[var(--foreground)] flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  {profile.location}
-                </span>
-              </div>
-
-              {/* Social links */}
-              <div className="pt-4 border-t border-[var(--border)]">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-[var(--success)]">$</span>
-                  <span className="text-[var(--muted)]">{t.contact.socialLabel}</span>
-                </div>
-                <div className="flex gap-4 pl-6 flex-wrap">
-                  {filteredSocial.map((item) => {
-                    const Icon = iconMap[item.icon];
-                    const isWeChat = item.icon === "wechat";
-
-                    if (isWeChat) {
-                      return (
-                        <button
-                          key={item.name}
-                          onClick={() => setShowWeChatQR(true)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors cursor-pointer"
-                        >
-                          {Icon && <Icon className="w-5 h-5" />}
-                          <span>{item.name}</span>
-                        </button>
-                      );
-                    }
-
-                    return (
-                      <a
-                        key={item.name}
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
-                      >
-                        {Icon && <Icon className="w-5 h-5" />}
-                        <span>{item.name}</span>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div className="pt-4">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--accent-secondary)] text-[var(--accent-secondary-foreground)] font-medium hover:opacity-90 transition-opacity"
-                >
-                  <Send className="w-5 h-5" />
-                  {t.contact.sendEmail}
-                </a>
-              </div>
+          <div className="flex flex-col items-start gap-3 lg:items-end">
+            <a href={`mailto:${profile.email}`} className="inline-flex min-h-11 items-center gap-2 bg-[var(--background)] px-5 text-sm font-medium text-[var(--foreground)] transition-transform duration-200 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--background)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--foreground)]">
+              <Mail className="h-4 w-4" />
+              {profile.email}
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+            <div className="flex items-center gap-2">
+              <a href="https://github.com/hongling2511" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="flex h-11 w-11 items-center justify-center text-[var(--on-dark-muted)] transition-colors duration-200 hover:text-[var(--background)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--background)]">
+                <Github className="h-5 w-5" />
+              </a>
+              <button onClick={() => setShowWeChat(true)} aria-label="WeChat" className="flex h-11 w-11 cursor-pointer items-center justify-center text-[var(--on-dark-muted)] transition-colors duration-200 hover:text-[var(--background)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--background)]">
+                <MessageCircle className="h-5 w-5" />
+              </button>
             </div>
-          </Terminal>
-        </motion.div>
+          </div>
+        </div>
       </div>
 
-      {/* WeChat QR Code Modal */}
       <AnimatePresence>
-        {showWeChatQR && (
+        {showWeChat && (
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={reduceMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            onClick={() => setShowWeChatQR(false)}
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-black/65 p-5"
+            onClick={() => setShowWeChat(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.3 }}
-              className="relative bg-[var(--card)] rounded-2xl p-6 shadow-2xl max-w-sm w-full border border-[var(--border)]"
-              onClick={(e) => e.stopPropagation()}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              className="relative w-full max-w-sm bg-[var(--background)] p-7 text-[var(--foreground)] shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
             >
-              {/* Close button */}
-              <button
-                onClick={() => setShowWeChatQR(false)}
-                className="absolute top-4 right-4 p-1 rounded-full hover:bg-[var(--border)] transition-colors"
-              >
-                <X className="w-5 h-5 text-[var(--muted)]" />
+              <button onClick={() => setShowWeChat(false)} aria-label="Close WeChat QR" className="absolute right-3 top-3 flex h-10 w-10 cursor-pointer items-center justify-center text-[var(--muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]">
+                <X className="h-5 w-5" />
               </button>
-
-              {/* Header */}
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--success)]/10 text-[var(--success)] text-sm mb-3">
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WeChat</span>
-                </div>
-                <h3 className="text-lg font-semibold text-[var(--foreground)]">{t.contact.wechat.title}</h3>
-              </div>
-
-              {/* QR Code */}
-              <div className="bg-white rounded-xl p-4 mb-4">
-                <div className="relative aspect-square w-full">
-                  <Image
-                    src="/wechat-qr.png"
-                    alt="WeChat QR Code"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-
-              {/* WeChat ID */}
-              <div className="text-center">
-                <p className="text-sm text-[var(--muted)] mb-2">{t.contact.wechat.searchHint}</p>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(weChatId);
-                    alert(t.contact.wechat.copied);
-                  }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] hover:bg-[var(--accent)]/20 transition-colors"
-                >
-                  <span className="font-mono font-medium">{weChatId}</span>
-                  <span className="text-xs">{t.contact.wechat.copyHint}</span>
-                </button>
+              <h3 className="font-serif text-2xl font-medium">WeChat</h3>
+              <p className="mt-2 text-sm text-[var(--muted)]">h594396193</p>
+              <div className="mt-6 bg-white p-4">
+                <Image src="/wechat-qr.png" alt="洪灵的微信二维码" width={320} height={320} className="h-auto w-full" />
               </div>
             </motion.div>
           </motion.div>
