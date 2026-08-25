@@ -16,11 +16,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
-      <main>
+      <main id="main-content">
         <Hero />
         <About />
-        <Skills />
         <Projects />
+        <Skills />
         <Experience />
         <BlogPreview posts={{ zh: zhPosts, en: enPosts }} />
         <Contact />

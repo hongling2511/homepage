@@ -1,33 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #1e293b;
-  --muted: #64748b;
-  --accent: #3b82f6;
-  --accent-foreground: #ffffff;
-  --accent-secondary: #ea580c;
-  --accent-secondary-foreground: #ffffff;
-  --success: #22c55e;
-  --card: #ffffff;
-  --card-foreground: #1e293b;
-  --border: #e2e8f0;
-  --border-hover: #cbd5e1;
+  --background: oklch(0.975 0.008 88);
+  --background-alpha: rgba(247, 245, 238, 0.92);
+  --foreground: oklch(0.235 0.018 70);
+  --muted: oklch(0.49 0.014 72);
+  --accent: oklch(0.35 0.075 252);
+  --accent-foreground: oklch(0.98 0.006 88);
+  --accent-secondary: oklch(0.35 0.075 252);
+  --accent-secondary-foreground: oklch(0.98 0.006 88);
+  --success: oklch(0.57 0.12 154);
+  --surface: oklch(0.995 0.004 88);
+  --surface-muted: oklch(0.948 0.01 86);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --border: oklch(0.88 0.012 82);
+  --border-strong: oklch(0.73 0.018 78);
+  --border-hover: var(--border-strong);
+  --on-dark-muted: oklch(0.78 0.012 82);
+  --shadow-paper: 0 18px 50px rgba(45, 39, 28, 0.08), 0 1px 3px rgba(45, 39, 28, 0.1);
+  --font-editorial: Charter, "Iowan Old Style", "Songti SC", "Noto Serif SC", Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", sans-serif;
 }
 
 .dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --muted: #94a3b8;
-  --accent: #60a5fa;
-  --accent-foreground: #0f172a;
-  --accent-secondary: #fb923c;
-  --accent-secondary-foreground: #0f172a;
-  --success: #4ade80;
-  --card: #1e293b;
-  --card-foreground: #f1f5f9;
-  --border: #334155;
-  --border-hover: #475569;
+  --background: oklch(0.19 0.012 72);
+  --background-alpha: rgba(32, 30, 27, 0.92);
+  --foreground: oklch(0.91 0.012 84);
+  --muted: oklch(0.68 0.014 80);
+  --accent: oklch(0.72 0.08 246);
+  --accent-foreground: oklch(0.19 0.012 72);
+  --accent-secondary: oklch(0.72 0.08 246);
+  --accent-secondary-foreground: oklch(0.19 0.012 72);
+  --success: oklch(0.72 0.12 154);
+  --surface: oklch(0.23 0.012 72);
+  --surface-muted: oklch(0.215 0.012 72);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --border: oklch(0.31 0.012 72);
+  --border-strong: oklch(0.44 0.016 76);
+  --border-hover: var(--border-strong);
+  --on-dark-muted: oklch(0.69 0.012 82);
+  --shadow-paper: 0 18px 50px rgba(0, 0, 0, 0.22), 0 1px 3px rgba(0, 0, 0, 0.22);
 }
 
 @theme inline {
@@ -44,56 +58,45 @@
   --color-border: var(--border);
   --color-border-hover: var(--border-hover);
   --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-editorial);
+  --font-sans: var(--font-body);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-jetbrains-mono), monospace;
+  font-family: var(--font-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Pulse animation for status indicator */
-@keyframes pulse-dot {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.1);
-  }
+h1,
+h2,
+h3,
+p {
+  text-wrap: pretty;
 }
 
-.animate-pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
+a,
+button {
+  touch-action: manipulation;
 }
 
-/* Terminal cursor blink */
-@keyframes blink {
-  0%, 50% {
-    opacity: 1;
-  }
-  51%, 100% {
-    opacity: 0;
-  }
-}
-
-.animate-blink {
-  animation: blink 1s step-end infinite;
-}
-
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Selection color */
 ::selection {
   background: var(--accent);
   color: var(--accent-foreground);
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -104,10 +107,20 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--muted);
-  border-radius: 4px;
+  background: var(--border-strong);
+  border-radius: 999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground);
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

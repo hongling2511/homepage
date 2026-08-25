@@ -1,88 +1,70 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { getProfile, getEducation } from "@/data/profile";
+import { ArrowUpRight, Check } from "lucide-react";
+import { getFocusAreas } from "@/data/profile";
 import { useLanguage } from "@/i18n";
-import { GraduationCap, Calendar } from "lucide-react";
 
 export function About() {
-  const { t, locale } = useLanguage();
-  const profile = getProfile(locale);
-  const education = getEducation(locale);
+  const { locale } = useLanguage();
+  const focusAreas = getFocusAreas(locale);
 
   return (
-    <section id="about" className="py-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Section title */}
-          <div className="flex items-center gap-3 mb-8">
-            <span className="text-[var(--success)]">$</span>
-            <h2 className="text-2xl font-bold">{t.about.title}</h2>
+    <section id="about" className="border-y border-[var(--border)] bg-[var(--surface-muted)] px-5 py-24 md:px-8 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-8 md:grid-cols-[220px_1fr] md:gap-14">
+          <div>
+            <span className="font-mono text-xs tracking-[0.14em] text-[var(--accent)]">01 · POSITION</span>
+            <h2 className="mt-4 font-serif text-3xl font-medium leading-tight text-[var(--foreground)]">
+              {locale === "zh" ? "一个职业母题，两条证据路径" : "One career thesis, two evidence paths"}
+            </h2>
           </div>
 
-          {/* About content */}
-          <div className="space-y-8">
-            {/* Summary card */}
-            <div className="p-6 rounded-lg border border-[var(--border)] bg-[var(--card)]">
-              <h3 className="text-lg font-semibold text-[var(--accent)] mb-4">
-                {t.about.aboutMe}
-              </h3>
-              <p className="text-[var(--foreground)] leading-relaxed">
-                {profile.summary}
-              </p>
-            </div>
+          <p className="max-w-3xl text-lg leading-8 text-[var(--muted)] [text-wrap:pretty]">
+            {locale === "zh"
+              ? "我的核心工作不是追逐工具，而是把复杂系统的边界、风险和反馈变得可验证。AI 研发效能负责缩短正确交付的路径，金融系统架构负责确保这条路径不会跨过一致性与资金风险的红线。"
+              : "My work is not about chasing tools. It is about making the boundaries, risks, and feedback loops of complex systems verifiable. AI delivery shortens the path to correct outcomes, while financial architecture keeps that path inside consistency and risk boundaries."}
+          </p>
+        </div>
 
-            {/* Education */}
-            <div className="p-6 rounded-lg border border-[var(--border)] bg-[var(--card)]">
-              <h3 className="text-lg font-semibold text-[var(--accent)] mb-4 flex items-center gap-2">
-                <GraduationCap className="w-5 h-5" />
-                {t.about.education}
-              </h3>
-              <div className="space-y-4">
-                {education.map((edu, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-4 border-b border-[var(--border)] last:border-0 last:pb-0"
-                  >
-                    <div>
-                      <h4 className="font-semibold text-[var(--foreground)]">
-                        {edu.school}
-                      </h4>
-                      <p className="text-[var(--muted)]">
-                        {edu.degree} · {edu.major}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
-                      <Calendar className="w-4 h-4" />
-                      {edu.period}
-                    </div>
-                  </div>
+        <div className="mt-16 grid gap-px bg-[var(--border)] lg:grid-cols-[.92fr_1.08fr]">
+          {focusAreas.map((area) => (
+            <article
+              key={area.id}
+              className="bg-[var(--background)] p-7 md:p-10"
+            >
+              <div className="flex items-start justify-between gap-6">
+                <div>
+                  <span className="font-mono text-xs text-[var(--accent)]">PATH {area.index}</span>
+                  <h3 className="mt-4 font-serif text-3xl font-medium leading-tight text-[var(--foreground)]">
+                    {area.title}
+                  </h3>
+                  <p className="mt-3 text-sm font-medium text-[var(--accent)]">{area.kicker}</p>
+                </div>
+                <span className="font-serif text-5xl text-[var(--border-strong)]" aria-hidden="true">{area.index}</span>
+              </div>
+
+              <p className="mt-7 max-w-xl leading-7 text-[var(--muted)] [text-wrap:pretty]">{area.description}</p>
+
+              <ul className="mt-8 space-y-3">
+                {area.evidence.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm leading-6 text-[var(--foreground)]">
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-[var(--accent)]" />
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
 
-            {/* Highlights */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-lg border border-[var(--border)] bg-[var(--card)] text-center">
-                <div className="text-3xl font-bold text-[var(--accent)]">10+</div>
-                <div className="text-sm text-[var(--muted)]">{t.about.highlights.experience}</div>
-              </div>
-              <div className="p-4 rounded-lg border border-[var(--border)] bg-[var(--card)] text-center">
-                <div className="text-3xl font-bold text-[var(--accent)]">{locale === "zh" ? "3亿+" : "300M+"}</div>
-                <div className="text-sm text-[var(--muted)]">{t.about.highlights.users}</div>
-              </div>
-              <div className="p-4 rounded-lg border border-[var(--border)] bg-[var(--card)] text-center">
-                <div className="text-3xl font-bold text-[var(--accent)]">30%+</div>
-                <div className="text-sm text-[var(--muted)]">{t.about.highlights.improvement}</div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+              <a
+                href={area.resumeHref}
+                download
+                className="mt-9 inline-flex min-h-10 items-center gap-2 text-sm font-medium text-[var(--accent)] transition-transform duration-200 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--background)]"
+              >
+                {area.resumeLabel}
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
